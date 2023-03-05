@@ -1,0 +1,37 @@
+{
+  "name": "@meeg/kai-delivery-testing-lib",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Chris Meagher",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --ext .ts src",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CMeeg/kai.git",
+    "directory": "packages/kai-delivery-testing-lib"
+  },
+  "bugs": {
+    "url": "https://github.com/CMeeg/kai/issues"
+  },
+  "homepage": "https://github.com/CMeeg/kai#readme",
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@kontent-ai/core-sdk": "^10.1.1",
+    "@kontent-ai/delivery-sdk": "^12.4.3"
+  },
+  "devDependencies": {
+    "@vitest/coverage-c8": "^0.29.2",
+    "eslint": "^8.35.0",
+    "eslint-config-kai": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4",
+    "vitest": "^0.29.2"
+  }
+}

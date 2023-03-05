@@ -1,0 +1,18 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# debug
+.pnpm-debug.log*
+
+# local env files
+.env.local
+
+# turbo
+.turbo
+
+# misc
+.DS_Store
+TODO.md
