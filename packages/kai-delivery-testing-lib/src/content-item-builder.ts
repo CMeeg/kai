@@ -5,6 +5,7 @@ import { projectDataCenterLocation } from './project'
 import type { ProjectDataCenterLocation } from './project'
 import {
   createAssetElement,
+  createCustomElement,
   createDateTimeElement,
   createLinkedItemsElement,
   createMultipleChoiceElement,
@@ -17,6 +18,7 @@ import {
 import type {
   ContentItemAssetElement,
   CreateAssetElementOptions,
+  CreateCustomElementOptions,
   CreateDateTimeElementOptions,
   CreateLinkedItemsElementOptions,
   CreateMultipleChoiceElementOptions,
@@ -88,6 +90,18 @@ function setAssetElement(
   })
 
   state.elements[key] = value
+}
+
+function setCustomElement(
+  state: ContentItemBuilderState,
+  value: string | null,
+  name: string,
+  codename?: string
+) {
+  const key = createElementCodename(name, codename)
+  const val = createCustomElement({ name, value })
+
+  state.elements[key] = val
 }
 
 function setDateTimeElement(
@@ -291,6 +305,9 @@ interface ContentItemBuilder {
       Pick<CreateAssetElementOptions, 'name' | 'assets'>
     >
   ): ContentItemBuilder
+  withCustomElement(
+    options: ContentItemBuilderElementOptions<CreateCustomElementOptions>
+  ): ContentItemBuilder
   withDateTimeElement(
     options: ContentItemBuilderElementOptions<CreateDateTimeElementOptions>
   ): ContentItemBuilder
@@ -339,6 +356,11 @@ function contentItemBuilder(options?: ContentItemBuilderOptions) {
     },
     withAssetElement: function (options) {
       setAssetElement(state, options.assets, options.name, options.codename)
+
+      return this
+    },
+    withCustomElement(options) {
+      setCustomElement(state, options.value, options.name, options.codename)
 
       return this
     },

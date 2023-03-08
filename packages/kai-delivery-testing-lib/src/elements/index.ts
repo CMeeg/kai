@@ -1,4 +1,5 @@
 export * from './asset-factory'
+export * from './custom-element-factory'
 export * from './date-time-factory'
 export * from './element'
 export * from './linked-items-factory'

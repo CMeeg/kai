@@ -1,5 +1,6 @@
 const elementTypeName = {
   asset: 'asset',
+  custom: 'custom',
   dateTime: 'date_time',
   linkedItems: 'modular_content',
   multipleChoice: 'multiple_choice',
