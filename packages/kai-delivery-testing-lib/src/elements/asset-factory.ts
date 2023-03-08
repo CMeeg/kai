@@ -36,7 +36,8 @@ function createAssetValue(
     size,
     url,
     width: null,
-    height: null
+    height: null,
+    renditions: {}
   }
 
   if (type.startsWith('image/')) {

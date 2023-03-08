@@ -1,0 +1,6 @@
+GET https://deliver.kontent.ai/{{$dotenv PROJECT_ID}}/items/all_elements HTTP/1.1
+
+###
+
+GET https://preview-deliver.kontent.ai/{{$dotenv PROJECT_ID}}/items/all_elements HTTP/1.1
+Authorization: Bearer {{$dotenv PREVIEW_API_KEY}}
