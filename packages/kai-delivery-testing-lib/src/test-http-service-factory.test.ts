@@ -4,7 +4,7 @@ import {
   createHttpServiceWithResponse,
   createHttpServiceWithData,
   createHttpServiceWithError
-} from './test-http-service'
+} from './test-http-service-factory'
 
 describe('createHttpServiceWithResponse', () => {
   test('output response should match input response', async () => {

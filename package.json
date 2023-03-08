@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
+    "config/*",
     "packages/*"
   ],
   "scripts": {
@@ -19,6 +20,7 @@
   "devDependencies": {
     "eslint-config-kai": "workspace:*",
     "prettier": "^2.8.4",
-    "turbo": "^1.8.3"
+    "turbo": "^1.8.3",
+    "vitest": "^0.29.2"
   }
 }

@@ -1,5 +1,6 @@
 {
   "javascript.validate.enable": false,
+  "vitest.enable": true,
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
