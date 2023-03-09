@@ -10,6 +10,10 @@ coverage
 # env files
 **/.http/**/.env
 .env.local
+.env*.local
+
+# typescript
+*.tsbuildinfo
 
 # turbo
 .turbo

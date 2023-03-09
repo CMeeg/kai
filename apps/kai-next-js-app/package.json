@@ -1,0 +1,27 @@
+{
+  "name": "kai-next-js-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
+    "ts:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "13.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.14.6",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "eslint": "^8.35.0",
+    "eslint-config-kai": "workspace:*",
+    "eslint-config-next": "13.2.3",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.5"
+  }
+}

@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .ts src",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "ts:check": "tsc --noEmit"
   },
   "main": "./index.ts",
   "types": "./index.ts",

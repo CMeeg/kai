@@ -7,10 +7,14 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "nextjs-app": "pnpm --dir \"packages/kai-next-js-app\"",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
-    "testing-lib": "pnpm --dir \"packages/kai-delivery-testing-lib\""
+    "testing-lib": "pnpm --dir \"packages/kai-delivery-testing-lib\"",
+    "ts:check": "turbo run ts:check"
   },
   "engines": {
     "node": ">=18.0.0"
