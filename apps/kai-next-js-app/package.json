@@ -7,20 +7,31 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
     "ts:check": "tsc --noEmit"
   },
   "dependencies": {
+    "@kontent-ai/delivery-sdk": "^12.4.3",
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "7.0.0-rc.0",
+    "@storybook/addon-interactions": "7.0.0-rc.0",
+    "@storybook/addon-links": "7.0.0-rc.0",
+    "@storybook/blocks": "7.0.0-rc.0",
+    "@storybook/nextjs": "7.0.0-rc.0",
+    "@storybook/react": "7.0.0-rc.0",
+    "@storybook/testing-library": "0.0.14-next.1",
     "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "eslint": "^8.35.0",
     "eslint-config-kai": "workspace:*",
     "eslint-config-next": "13.2.3",
+    "storybook": "7.0.0-rc.0",
     "tsconfig": "workspace:*",
     "typescript": "^4.9.5"
   }
