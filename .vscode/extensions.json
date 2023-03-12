@@ -4,6 +4,7 @@
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "humao.rest-client",
+    "stylelint.vscode-stylelint",
     "ZixuanChen.vitest-explorer"
   ]
 }

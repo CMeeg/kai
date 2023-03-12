@@ -5,7 +5,9 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "next lint",
+    "lint": "pnpm lint:js & pnpm lint:css",
+    "lint:js": "next lint",
+    "lint:css": "stylelint \"**/*.css\" --aei",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
@@ -28,10 +30,15 @@
     "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "css-loader": "^6.7.3",
     "eslint": "^8.35.0",
     "eslint-config-kai": "workspace:*",
     "eslint-config-next": "13.2.3",
+    "postcss-loader": "^7.0.2",
     "storybook": "7.0.0-rc.0",
+    "stylelint": "^14.16.1",
+    "stylelint-config-kai": "workspace: *",
+    "style-loader": "^3.3.1",
     "tsconfig": "workspace:*",
     "typescript": "^4.9.5"
   }
