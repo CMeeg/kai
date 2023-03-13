@@ -1,4 +1,5 @@
 {
+  "css.validate": false,
   "javascript.validate.enable": false,
   "vitest.enable": true,
   "[css]": {

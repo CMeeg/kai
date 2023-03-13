@@ -1,0 +1,37 @@
+/* color */
+@value color-accent-1: #fafafa;
+@value color-accent-2: #eaeaea;
+@value color-accent-7: #333;
+@value color-black: #000;
+@value color-white: #fff;
+@value color-success: #0070f3;
+@value color-cyan: #79ffe1;
+
+/* font */
+@value font-size-sm: 0.875rem;
+@value font-leading-sm: 1.25rem;
+@value font-size-4xl: 2.25rem;
+@value font-leading-4xl: 2.5rem;
+@value font-size-5xl: 2.5rem;
+@value font-leading-5xl: 1rem;
+@value font-leading-tight: 1.2;
+@value font-tracking-tighter: -0.04em;
+@value font-weight-bold: 700;
+
+/* spacing */
+@value spacing-2: 0.5rem;
+@value spacing-3: 0.75rem;
+@value spacing-4: 1rem;
+@value spacing-5: 1.25rem;
+@value spacing-6: 1.5rem;
+@value spacing-8: 2rem;
+@value spacing-10: 2.5rem;
+@value spacing-12: 3rem;
+@value spacing-28: 7rem;
+
+/* width */
+@value width-sm: 640px;
+@value width-md: 768px;
+@value width-lg: 1024px;
+@value width-xl: 1280px;
+@value width-1_2: 50%;

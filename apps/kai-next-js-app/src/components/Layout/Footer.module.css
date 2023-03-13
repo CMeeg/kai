@@ -1,0 +1,87 @@
+@value theme: "~/styles/theme.module.css";
+@value media: "~/styles/media.module.css";
+@value animation: "~/styles/animation.module.css";
+@value color-accent-1, color-accent-2, color-black, color-white, font-size-4xl, font-size-5xl, font-leading-tight, font-tracking-tighter, font-weight-bold, spacing-3, spacing-4, spacing-6, spacing-8, spacing-10, spacing-12, spacing-28, width-1_2 from theme;
+@value lg from media;
+@value transition-colors, transition-timing-default from animation;
+
+.footer {
+  border-color: color-accent-2;
+  border-top-width: 1px;
+  background-color: color-accent-1;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: spacing-28 0;
+}
+
+.footer-heading {
+  margin-bottom: spacing-10;
+  font-size: font-size-4xl;
+  font-weight: font-weight-bold;
+  letter-spacing: font-tracking-tighter;
+  line-height: font-leading-tight;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  padding: spacing-3 spacing-12;
+  border-width: 1px;
+  border-color: color-black;
+  margin: 0 spacing-3 spacing-6;
+  background-color: color-black;
+  color: color-white;
+  font-weight: font-weight-bold;
+  transition-duration: 200ms;
+  transition-property: transition-colors;
+  transition-timing-function: transition-timing-default;
+}
+
+.button:hover {
+  background-color: color-white;
+  color: color-black;
+}
+
+.link {
+  margin: 0 spacing-3;
+  font-weight: font-weight-bold;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+@media lg {
+  .footer-inner {
+    flex-direction: row;
+  }
+
+  .footer-heading {
+    width: width-1_2;
+    padding-right: spacing-4;
+    margin-bottom: 0;
+    font-size: font-size-5xl;
+    text-align: left;
+  }
+
+  .footer-links {
+    width: width-1_2;
+    flex-direction: row;
+    padding-left: spacing-4;
+  }
+
+  .button {
+    padding: spacing-3 spacing-8;
+    margin-bottom: 0;
+  }
+}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import Container from './'
-import Image from '../Image'
+import Image from '~/components/Image'
 import coverPic from '../../../public/cover.jpg'
 
 const meta = {

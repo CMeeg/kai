@@ -1,4 +1,34 @@
+@value theme: "~/styles/theme.module.css";
+@value media: "~/styles/media.module.css";
+@value spacing-5, width-sm, width-md, width-lg, width-xl from theme;
+@value sm, md, lg, xl from media;
+
 .container {
-  padding: 0 1.25rem;
+  width: 100%;
+  padding: 0 spacing-5;
   margin: 0 auto;
+}
+
+@media sm {
+  .container {
+    max-width: width-sm;
+  }
+}
+
+@media md {
+  .container {
+    max-width: width-md;
+  }
+}
+
+@media lg {
+  .container {
+    max-width: width-lg;
+  }
+}
+
+@media xl {
+  .container {
+    max-width: width-xl;
+  }
 }
