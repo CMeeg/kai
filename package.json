@@ -7,14 +7,14 @@
     "packages/*"
   ],
   "scripts": {
+    "app:nextjs": "pnpm --dir \"apps/kai-next-js-app\"",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "nextjs-app": "pnpm --dir \"apps/kai-next-js-app\"",
+    "package:testing-lib": "pnpm --dir \"packages/kai-delivery-testing-lib\"",
     "storybook": "turbo run storybook",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
-    "testing-lib": "pnpm --dir \"packages/kai-delivery-testing-lib\"",
     "ts:check": "turbo run ts:check"
   },
   "engines": {
