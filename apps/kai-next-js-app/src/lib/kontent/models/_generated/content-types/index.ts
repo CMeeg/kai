@@ -1,2 +1,2 @@
-export * from './AuthorContentType';
-export * from './PostContentType';
+export * from './AuthorContentItem';
+export * from './PostContentItem';

@@ -1,27 +1,50 @@
-import Head from 'next/head'
 import type { GetStaticProps } from 'next'
-import Layout from '~/components/Layout'
-import Container from '~/components/Container'
+import type { RouteProps } from './_app'
+import { Meta } from '~/components/Meta'
+import { createLayoutContentProps } from '~/components/Layout'
+import { HomePage, createHomePageContentProps } from '~/components/HomePage'
+import type { HomePageContentProps } from '~/components/HomePage'
+import { createDeliveryClient } from '~/lib/kontent/delivery-client'
+import { createPostsApi } from '~/lib/posts'
 
-interface HomeRouteProps {
-  preview: boolean
-}
+type HomeRouteProps = RouteProps<HomePageContentProps>
 
-export default function HomeRoute({ preview }: HomeRouteProps) {
+export default function HomeRoute({ meta, page }: HomeRouteProps) {
   return (
-    <Layout preview={preview}>
-      <Head>
-        <title>Next.js Blog Example with Kontent.ai</title>
-      </Head>
-      <Container>TODO</Container>
-    </Layout>
+    <>
+      <Meta title={meta.title} />
+      <HomePage heroPost={page.heroPost} />
+    </>
   )
 }
 
 export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   preview = false
 }) => {
+  const deliveryClient = createDeliveryClient(preview)
+  const postsResponse = await createPostsApi(deliveryClient).getPosts()
+
+  if (postsResponse.error) {
+    // TODO: Deal with this error -> 500
+    throw new Error(postsResponse.error.message)
+  }
+
+  if (!postsResponse.items) {
+    // TODO: Deal with this error -> 404
+    return {
+      notFound: true
+    }
+  }
+
   return {
-    props: { preview }
+    props: {
+      // TODO: Create metadata snippet and home page content type and get metadata from Kontent
+      meta: {
+        title: 'Next.js Blog Example with Kontent.ai'
+      },
+      layout: createLayoutContentProps(preview),
+      page: createHomePageContentProps(postsResponse.items)
+    },
+    revalidate: 600
   }
 }

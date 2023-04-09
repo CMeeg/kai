@@ -1,6 +1,10 @@
 import Head from 'next/head'
 
-function Meta() {
+interface MetaProps {
+  title: string
+}
+
+function Meta({ title }: MetaProps) {
   return (
     <Head>
       <link
@@ -30,6 +34,7 @@ function Meta() {
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
       <meta name="theme-color" content="#000" />
+      <title>{title}</title>
       <meta
         name="description"
         content="A statically generated blog example using Next.js and Kontent.ai."
@@ -39,3 +44,5 @@ function Meta() {
 }
 
 export { Meta }
+
+export type { MetaProps }

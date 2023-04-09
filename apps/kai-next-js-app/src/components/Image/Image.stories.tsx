@@ -3,7 +3,7 @@ import Image from './'
 import coverPic from '../../../public/cover.jpg'
 
 const meta = {
-  title: 'Kai/Image',
+  title: 'Components/Image',
   component: Image,
   tags: ['autodocs']
 } satisfies Meta<typeof Image>

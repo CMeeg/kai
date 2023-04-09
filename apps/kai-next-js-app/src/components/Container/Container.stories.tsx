@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Container from './'
-import Image from '~/components/Image'
+import { Container } from './'
+import { Image } from '~/components/Image'
 import coverPic from '../../../public/cover.jpg'
 
 const meta = {
-  title: 'Kai/Container',
+  title: 'Components/Container',
   component: Container,
   tags: ['autodocs']
 } satisfies Meta<typeof Container>

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import KontentImage from './'
 
 const meta = {
-  title: 'Kai/KontentImage',
+  title: 'Components/KontentImage',
   component: KontentImage,
   tags: ['autodocs']
 } satisfies Meta<typeof KontentImage>

@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react'
-import styles from './Container.module.css'
 
 interface ContainerProps {
   children: ReactNode
 }
 
 function Container({ children }: ContainerProps) {
-  return <div className={styles.container}>{children}</div>
+  return <div className="container mx-auto px-5">{children}</div>
 }
 
 export { Container }

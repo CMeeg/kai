@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react'
-import { Meta } from './Meta'
-import Alert from './Alert'
-import Footer from './Footer'
-import styles from './Layout.module.css'
+import { Alert } from './Alert'
+import { Footer } from './Footer'
 
 interface LayoutProps {
   preview: boolean
@@ -12,8 +10,7 @@ interface LayoutProps {
 function Layout({ preview, children }: LayoutProps) {
   return (
     <>
-      <Meta />
-      <div className={styles.layout}>
+      <div className="min-h-screen">
         <Alert preview={preview} />
         <main>{children}</main>
       </div>

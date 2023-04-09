@@ -40,14 +40,14 @@ const config: IGenerateModelsConfig = {
   isEnterpriseSubscription: false,
   addTimestamp: false,
   elementResolver: 'camelCase',
-  contentTypeFileResolver: (type) => createName(type, 'ContentType'),
-  contentTypeResolver: (type) => createName(type, 'ContentType'),
+  contentTypeFileResolver: (type) => createName(type, 'ContentItem'),
+  contentTypeResolver: (type) => createName(type, 'ContentItem'),
   contentTypeSnippetFileResolver: (snippet) =>
     createName(snippet, 'ContentTypeSnippet'),
   contentTypeSnippetResolver: (snippet) =>
     createName(snippet, 'ContentTypeSnippet'),
-  taxonomyTypeFileResolver: (taxonomy) => createName(taxonomy, 'Taxonomy'),
-  taxonomyTypeResolver: (taxonomy) => createName(taxonomy, 'Taxonomy'),
+  taxonomyTypeFileResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
+  taxonomyTypeResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
   outputDir
 }
 

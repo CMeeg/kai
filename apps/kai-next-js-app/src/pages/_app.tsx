@@ -1,6 +1,23 @@
 import type { AppProps } from 'next/app'
-import '~/styles/base.css'
+import type { MetaProps } from '~/components/Meta'
+import { Layout } from '~/components/Layout'
+import type { LayoutContentProps } from '~/components/Layout'
+import '~/styles/globals.css'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+interface RouteProps<TPageContentProps> {
+  meta: MetaProps
+  layout: LayoutContentProps
+  page: TPageContentProps
 }
+
+type AppPageRouteProps = AppProps<RouteProps<unknown>>
+
+export default function MyApp({ Component, pageProps }: AppPageRouteProps) {
+  return (
+    <Layout preview={pageProps.layout.preview}>
+      <Component {...pageProps} />
+    </Layout>
+  )
+}
+
+export type { RouteProps }

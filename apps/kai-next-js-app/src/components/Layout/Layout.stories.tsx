@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Layout from './'
 
 const meta = {
-  title: 'Kai/Layout',
+  title: 'Components/Layout',
   component: Layout,
   tags: ['autodocs']
 } satisfies Meta<typeof Layout>

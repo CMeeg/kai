@@ -6,7 +6,7 @@ import { type IContentItem, type Elements } from '@kontent-ai/delivery-sdk';
  * Id: dd4ac826-3fdd-59c6-a99b-a718bcb1631e
  * Codename: author
  */
-export type AuthorContentType = IContentItem<{
+export type AuthorContentItem = IContentItem<{
   /**
    * Name (text)
    * Required: false
