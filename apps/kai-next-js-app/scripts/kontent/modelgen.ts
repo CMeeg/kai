@@ -39,7 +39,7 @@ const config: IGenerateModelsConfig = {
   apiKey,
   isEnterpriseSubscription: false,
   addTimestamp: false,
-  elementResolver: 'camelCase',
+  elementResolver: 'snakeCase',
   contentTypeFileResolver: (type) => createName(type, 'ContentItem'),
   contentTypeResolver: (type) => createName(type, 'ContentItem'),
   contentTypeSnippetFileResolver: (snippet) =>

@@ -31,7 +31,7 @@ export type PostContentItem = IContentItem<{
    * Id: 5164e125-3192-5858-a047-0fdef8ea8e56
    * Codename: cover_image
    */
-  coverImage: Elements.AssetsElement;
+  cover_image: Elements.AssetsElement;
 
   /**
    * Date (date_time)

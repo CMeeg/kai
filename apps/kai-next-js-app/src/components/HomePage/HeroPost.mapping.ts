@@ -13,7 +13,6 @@ function createHeroPostProps(post: PostContentItem): HeroPostProps {
   return {
     post: {
       title: post.elements.title.value,
-      // TODO: Model gen issue here...
       coverImage: post.elements.cover_image.value[0].url,
       date: post.elements.date.value,
       excerpt: post.elements.excerpt.value,
