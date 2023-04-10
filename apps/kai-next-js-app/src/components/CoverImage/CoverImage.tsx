@@ -1,20 +1,21 @@
 import cn from 'classnames'
-import { Image } from '~/components/Image'
 import Link from 'next/link'
+import { Image } from '~/components/Image'
+import type { ImageAsset } from '~/lib/media'
 
 interface CoverImageProps {
   title: string
-  src: string
+  image: ImageAsset
   slug?: string
 }
 
-function CoverImage({ title, src, slug }: CoverImageProps) {
-  const image = (
+function CoverImage({ title, image, slug }: CoverImageProps) {
+  const imageComponent = (
     <Image
       width={2000}
       height={1000}
-      alt={`Cover Image for ${title}`}
-      src={src}
+      alt={image.alt}
+      src={image.url}
       className={cn('shadow-small', {
         'hover:shadow-medium transition-shadow duration-200': slug
       })}
@@ -24,10 +25,10 @@ function CoverImage({ title, src, slug }: CoverImageProps) {
     <div className="sm:mx-0">
       {slug ? (
         <Link href={`/posts/${slug}`} aria-label={title}>
-          {image}
+          {imageComponent}
         </Link>
       ) : (
-        image
+        imageComponent
       )}
     </div>
   )

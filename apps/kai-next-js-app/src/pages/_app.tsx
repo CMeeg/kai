@@ -4,10 +4,10 @@ import { Layout } from '~/components/Layout'
 import type { LayoutContentProps } from '~/components/Layout'
 import '~/styles/globals.css'
 
-interface RouteProps<TPageContentProps> {
+interface RouteProps<TPageProps> {
   meta: MetaProps
   layout: LayoutContentProps
-  page: TPageContentProps
+  page: TPageProps
 }
 
 type AppPageRouteProps = AppProps<RouteProps<unknown>>

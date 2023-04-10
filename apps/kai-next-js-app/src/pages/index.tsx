@@ -1,19 +1,19 @@
 import type { GetStaticProps } from 'next'
 import type { RouteProps } from './_app'
 import { Meta } from '~/components/Meta'
-import { createLayoutContentProps } from '~/components/Layout'
-import { HomePage, createHomePageContentProps } from '~/components/HomePage'
-import type { HomePageContentProps } from '~/components/HomePage'
+import { createLayoutProps } from '~/components/Layout'
+import { HomePage, createHomePageProps } from '~/components/HomePage'
+import type { HomePageProps } from '~/components/HomePage'
 import { createDeliveryClient } from '~/lib/kontent/delivery-client'
 import { createPostsApi } from '~/lib/posts'
 
-type HomeRouteProps = RouteProps<HomePageContentProps>
+type HomeRouteProps = RouteProps<HomePageProps>
 
 export default function HomeRoute({ meta, page }: HomeRouteProps) {
   return (
     <>
       <Meta title={meta.title} />
-      <HomePage heroPost={page.heroPost} />
+      <HomePage heroPost={page.heroPost} morePosts={page.morePosts} />
     </>
   )
 }
@@ -42,8 +42,8 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
       meta: {
         title: 'Next.js Blog Example with Kontent.ai'
       },
-      layout: createLayoutContentProps(preview),
-      page: createHomePageContentProps(postsResponse.items)
+      layout: createLayoutProps(preview),
+      page: createHomePageProps(postsResponse.items)
     },
     revalidate: 600
   }

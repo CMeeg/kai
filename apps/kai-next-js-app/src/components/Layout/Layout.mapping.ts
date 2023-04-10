@@ -2,12 +2,12 @@ import type { LayoutProps } from './Layout'
 
 type LayoutContentProps = Pick<LayoutProps, 'preview'>
 
-function createLayoutContentProps(preview: boolean): LayoutContentProps {
+function createLayoutProps(preview: boolean): LayoutContentProps {
   return {
     preview
   }
 }
 
-export { createLayoutContentProps }
+export { createLayoutProps }
 
 export type { LayoutContentProps }

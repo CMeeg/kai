@@ -1,25 +1,19 @@
 import type { PostContentItem } from '~/lib/kontent/models'
 import type { HomePageProps } from './HomePage'
-import type { HeroPostProps } from './HeroPost'
 import { createHeroPostProps } from './HeroPost.mapping'
+import { createMoreStoriesProps } from '~/components/MoreStories/MoreStories.mapping'
 
-type HomePageContentProps = HomePageProps
-
-function createHomePageContentProps(
-  posts: PostContentItem[]
-): HomePageContentProps {
+function createHomePageProps(posts: PostContentItem[]): HomePageProps {
   const heroPost = createHeroPostProps(posts[0])
 
-  // TODO: Map when this component exists
-  // const morePosts = posts.length > 1
-  //   ? posts.slice(1).map(post => createPostProps(post))
-  //   : []
+  const morePosts = createMoreStoriesProps(
+    posts.length > 1 ? posts.slice(1) : []
+  )
 
   return {
-    heroPost
+    heroPost,
+    morePosts
   }
 }
 
-export { createHomePageContentProps }
-
-export type { HomePageContentProps }
+export { createHomePageProps }

@@ -1,24 +1,9 @@
-import type { AuthorContentItem, PostContentItem } from '~/lib/kontent/models'
-import type { Author } from '~/lib/posts'
-import type { HeroPostProps } from './HeroPost'
+import type { PostContentItem } from '~/lib/kontent/models'
+import { createPostSummary } from '~/lib/posts'
 
-function createAuthor(author: AuthorContentItem): Author {
+function createHeroPostProps(post: PostContentItem) {
   return {
-    name: author.elements.name.value,
-    picture: author.elements.picture.value[0].url
-  }
-}
-
-function createHeroPostProps(post: PostContentItem): HeroPostProps {
-  return {
-    post: {
-      title: post.elements.title.value,
-      coverImage: post.elements.cover_image.value[0].url,
-      date: post.elements.date.value,
-      excerpt: post.elements.excerpt.value,
-      author: createAuthor(post.elements.author.linkedItems[0]),
-      slug: post.elements.slug.value
-    }
+    post: createPostSummary(post)
   }
 }
 

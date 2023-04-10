@@ -1,7 +1,7 @@
 import NextImage from 'next/image'
 import type { ImageProps as NextImageProps } from 'next/image'
-import { isKontentAsset } from '~/lib/kontent/assets/image'
-import type { KontentImageTransform } from '~/lib/kontent/assets/image'
+import { isKontentAsset } from '~/lib/kontent/assets'
+import type { KontentImageTransform } from '~/lib/kontent/assets'
 import { KontentImage } from '~/components/KontentImage'
 import type { KontentImageProps } from '~/components/KontentImage'
 
