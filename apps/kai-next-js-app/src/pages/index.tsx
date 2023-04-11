@@ -4,8 +4,11 @@ import { Meta } from '~/components/Meta'
 import { createLayoutProps } from '~/components/Layout'
 import { HomePage, createHomePageProps } from '~/components/HomePage'
 import type { HomePageProps } from '~/components/HomePage'
-import { createDeliveryClient } from '~/lib/kontent/delivery-client'
-import { createPostsApi } from '~/lib/posts'
+import {
+  createDeliveryClient,
+  fetchContentItems
+} from '~/lib/kontent/delivery-client'
+import { createAllPostsQuery } from '~/lib/posts'
 
 type HomeRouteProps = RouteProps<HomePageProps>
 
@@ -13,7 +16,7 @@ export default function HomeRoute({ meta, page }: HomeRouteProps) {
   return (
     <>
       <Meta title={meta.title} />
-      <HomePage heroPost={page.heroPost} morePosts={page.morePosts} />
+      <HomePage posts={page.posts} />
     </>
   )
 }
@@ -22,7 +25,8 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   preview = false
 }) => {
   const deliveryClient = createDeliveryClient(preview)
-  const postsResponse = await createPostsApi(deliveryClient).getPosts()
+  const allPostsQuery = createAllPostsQuery(deliveryClient)
+  const postsResponse = await fetchContentItems(allPostsQuery)
 
   if (postsResponse.error) {
     // TODO: Deal with this error -> 500

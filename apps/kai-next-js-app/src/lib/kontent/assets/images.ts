@@ -1,7 +1,7 @@
 import { ImageUrlTransformationBuilder } from '@kontent-ai/delivery-sdk'
 import { ImageLoaderProps } from 'next/image'
 
-// TODO: Is is `assets-au-01`?!
+// TODO: Could just check for `*.kc-usercontent.com`
 const assetDomains = [
   'assets-au-01.kc-usercontent.com',
   'preview-assets-au-01.kc-usercontent.com',

@@ -1,27 +1,5 @@
-import {
-  DeliveryClient,
-  DeliveryError,
-  MultipleItemsQuery
-} from '@kontent-ai/delivery-sdk'
-import type {
-  IDeliveryClientConfig,
-  IContentItem
-} from '@kontent-ai/delivery-sdk'
-
-function createDeliveryClient(preview = false) {
-  const config: IDeliveryClientConfig = {
-    projectId: process.env.PRIVATE_KONTENT_PROJECT_ID ?? ''
-  }
-
-  if (preview) {
-    config.previewApiKey = process.env.PRIVATE_KONTENT_PREVIEW_API_KEY
-    config.defaultQueryConfig = {
-      usePreviewMode: true
-    }
-  }
-
-  return new DeliveryClient(config)
-}
+import { DeliveryError, MultipleItemsQuery } from '@kontent-ai/delivery-sdk'
+import type { IContentItem } from '@kontent-ai/delivery-sdk'
 
 interface ContentItemsResponse<
   TContentItem extends IContentItem = IContentItem
@@ -85,8 +63,9 @@ async function fetchContentItems<
 
     return createContentItemsSuccessResponse(response.data.items)
   } catch (error) {
+    // TODO: Logging
     return createContentItemsErrorResponse<TContentItem>(error)
   }
 }
 
-export { createDeliveryClient, fetchContentItems }
+export { fetchContentItems }
