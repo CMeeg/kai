@@ -1,5 +1,5 @@
 import type { GetStaticProps } from 'next'
-import type { RouteProps } from './_app'
+import type { RouteProps } from '~/pages/_app'
 import { Meta } from '~/components/Meta'
 import { createLayoutProps } from '~/components/Layout'
 import { HomePage, createHomePageProps } from '~/components/HomePage'
@@ -24,6 +24,8 @@ export default function HomeRoute({ meta, page }: HomeRouteProps) {
 export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   preview = false
 }) => {
+  // Get posts
+
   const deliveryClient = createDeliveryClient(preview)
   const allPostsQuery = createAllPostsQuery(deliveryClient)
   const postsResponse = await fetchContentItems(allPostsQuery)
@@ -39,6 +41,8 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
       notFound: true
     }
   }
+
+  // Map response data and return props
 
   return {
     props: {

@@ -13,13 +13,11 @@ function HomePage({ posts }: HomePageProps) {
   const morePosts = posts.length > 1 ? posts.slice(1) : []
 
   return (
-    <>
-      <Container>
-        <Intro />
-        <HeroPost post={heroPost} />
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
-      </Container>
-    </>
+    <Container>
+      <Intro />
+      <HeroPost post={heroPost} />
+      {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+    </Container>
   )
 }
 

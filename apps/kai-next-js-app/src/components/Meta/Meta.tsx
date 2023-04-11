@@ -2,9 +2,10 @@ import Head from 'next/head'
 
 interface MetaProps {
   title: string
+  image?: string | null
 }
 
-function Meta({ title }: MetaProps) {
+function Meta({ title, image }: MetaProps) {
   return (
     <Head>
       <link
@@ -39,6 +40,7 @@ function Meta({ title }: MetaProps) {
         name="description"
         content="A statically generated blog example using Next.js and Kontent.ai."
       />
+      {image && <meta property="og:image" content={image} />}
     </Head>
   )
 }

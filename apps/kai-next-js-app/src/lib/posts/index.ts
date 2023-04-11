@@ -1,2 +1,2 @@
-export * from './api'
-export * from './posts'
+export * from './mapping'
+export * from './queries'
