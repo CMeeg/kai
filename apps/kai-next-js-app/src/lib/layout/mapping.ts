@@ -1,4 +1,4 @@
-import type { LayoutProps } from './Layout'
+import type { LayoutProps } from '~/components/Layout'
 
 type LayoutContentProps = Pick<LayoutProps, 'preview'>
 

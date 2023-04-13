@@ -1,15 +1,16 @@
 import type { GetStaticProps } from 'next'
 import type { RouteProps } from '~/pages/_app'
-import { Meta, createMetaProps } from '~/components/Meta'
-import { createLayoutProps } from '~/components/Layout'
-import { HomePage, createHomePageProps } from '~/components/HomePage'
+import { Meta } from '~/components/Meta'
+import { HomePage } from '~/components/HomePage'
 import type { HomePageProps } from '~/components/HomePage'
 import {
   createDeliveryClient,
   fetchContentItem,
   fetchContentItems
 } from '~/lib/kontent/delivery-client'
-import { createHomeQuery } from '~/lib/home'
+import { createMetaProps } from '~/lib/seo'
+import { createLayoutProps } from '~/lib/layout'
+import { createHomeQuery, createHomePageProps } from '~/lib/home'
 import { createAllPostsQuery } from '~/lib/posts'
 
 type HomeRouteProps = RouteProps<HomePageProps>

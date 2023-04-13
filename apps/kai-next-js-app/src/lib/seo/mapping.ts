@@ -1,4 +1,4 @@
-import type { MetaProps } from './Meta'
+import type { MetaProps } from '~/components/Meta'
 import type { HasSeoMetadataContentItem } from '~/lib/kontent/models'
 import { contentTypes } from '~/lib/kontent/models'
 import { createImageFromAsset } from '~/lib/media'

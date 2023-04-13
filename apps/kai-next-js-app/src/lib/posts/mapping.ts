@@ -1,6 +1,7 @@
 import type { AuthorContentItem, PostContentItem } from '~/lib/kontent/models'
 import { createImageFromAsset } from '~/lib/media'
 import type { ImageAsset } from '~/lib/media'
+import type { PostPageProps } from '~/components/PostPage'
 
 interface Author {
   name: string
@@ -55,6 +56,16 @@ function createPostSummary(contentItem: PostContentItem): PostSummary {
   }
 }
 
-export { createPost, createPostSummary }
+function createPostPageProps(
+  postItem: PostContentItem,
+  morePostsItems: PostContentItem[]
+): PostPageProps {
+  return {
+    post: createPost(postItem),
+    morePosts: morePostsItems.map((post) => createPostSummary(post))
+  }
+}
+
+export { createPost, createPostSummary, createPostPageProps }
 
 export type { Author, Post, PostSummary }
