@@ -44,6 +44,92 @@ export const contentTypes = {
   },
 
   /**
+   * Home
+   */
+  home: {
+    codename: 'home',
+    id: 'eb31c10c-db3f-4f46-b470-1c655c13fdfc',
+    externalId: undefined,
+    name: 'Home',
+    elements: {
+      /**
+       * Description (text)
+       *
+       * Try to accurately summarise content (avoid generic descriptions); Include target keyword(s) where it makes sense; Try to keep it under 160 characters.
+       */
+      seo_metadata__description: {
+        codename: 'seo_metadata__description',
+        id: '9f1b0ef2-4ff2-494d-86a0-4f38e784de4a',
+        externalId: undefined,
+        name: 'Description',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * og:description (text)
+       *
+       * Complement the title to make the snippet as appealing as possible; Keep it short and sweet; If not provided the Description will be used.
+       */
+      seo_metadata__og_description: {
+        codename: 'seo_metadata__og_description',
+        id: '3902f12b-2bc8-4939-afc3-5e824160f61a',
+        externalId: undefined,
+        name: 'og:description',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * og:image (asset)
+       *
+       * Use images with a 1.91:1 ratio and minimum recommended dimensions of 1200x630 for optimal clarity across all devices; See https://developers.facebook.com/docs/sharing/webmasters/images.
+       */
+      seo_metadata__og_image: {
+        codename: 'seo_metadata__og_image',
+        id: 'db65bd98-9ec8-4145-b3a2-2805207f0429',
+        externalId: undefined,
+        name: 'og:image',
+        required: false,
+        type: 'asset',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * og:title (text)
+       *
+       * Focus on accuracy, value, and clickability; Try to keep it between 40 to 60 characters; Don't include branding e.g. site name; If not provided the Title will be used.
+       */
+      seo_metadata__og_title: {
+        codename: 'seo_metadata__og_title',
+        id: '4f99f771-8427-4f31-947f-44595099e804',
+        externalId: undefined,
+        name: 'og:title',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * Title (text)
+       *
+       * Be brief, but descriptive; Use title case; Include target keyword(s) where it makes sense; Try to keep it under 60 characters; Don't include branding e.g. site name.
+       */
+      seo_metadata__title: {
+        codename: 'seo_metadata__title',
+        id: '11ff16b5-10f4-402e-98c4-0ea649878efa',
+        externalId: undefined,
+        name: 'Title',
+        required: true,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+    },
+  },
+
+  /**
    * Post
    */
   post: {
@@ -105,6 +191,21 @@ export const contentTypes = {
       },
 
       /**
+       * Description (text)
+       *
+       * Try to accurately summarise content (avoid generic descriptions); Include target keyword(s) where it makes sense; Try to keep it under 160 characters.
+       */
+      seo_metadata__description: {
+        codename: 'seo_metadata__description',
+        id: '9f1b0ef2-4ff2-494d-86a0-4f38e784de4a',
+        externalId: undefined,
+        name: 'Description',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
        * Excerpt (text)
        */
       excerpt: {
@@ -115,6 +216,51 @@ export const contentTypes = {
         required: false,
         type: 'text',
         snippetCodename: undefined,
+      },
+
+      /**
+       * og:description (text)
+       *
+       * Complement the title to make the snippet as appealing as possible; Keep it short and sweet; If not provided the Description will be used.
+       */
+      seo_metadata__og_description: {
+        codename: 'seo_metadata__og_description',
+        id: '3902f12b-2bc8-4939-afc3-5e824160f61a',
+        externalId: undefined,
+        name: 'og:description',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * og:image (asset)
+       *
+       * Use images with a 1.91:1 ratio and minimum recommended dimensions of 1200x630 for optimal clarity across all devices; See https://developers.facebook.com/docs/sharing/webmasters/images.
+       */
+      seo_metadata__og_image: {
+        codename: 'seo_metadata__og_image',
+        id: 'db65bd98-9ec8-4145-b3a2-2805207f0429',
+        externalId: undefined,
+        name: 'og:image',
+        required: false,
+        type: 'asset',
+        snippetCodename: 'seo_metadata',
+      },
+
+      /**
+       * og:title (text)
+       *
+       * Focus on accuracy, value, and clickability; Try to keep it between 40 to 60 characters; Don't include branding e.g. site name; If not provided the Title will be used.
+       */
+      seo_metadata__og_title: {
+        codename: 'seo_metadata__og_title',
+        id: '4f99f771-8427-4f31-947f-44595099e804',
+        externalId: undefined,
+        name: 'og:title',
+        required: false,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
       },
 
       /**
@@ -141,6 +287,21 @@ export const contentTypes = {
         required: true,
         type: 'text',
         snippetCodename: undefined,
+      },
+
+      /**
+       * Title (text)
+       *
+       * Be brief, but descriptive; Use title case; Include target keyword(s) where it makes sense; Try to keep it under 60 characters; Don't include branding e.g. site name.
+       */
+      seo_metadata__title: {
+        codename: 'seo_metadata__title',
+        id: '11ff16b5-10f4-402e-98c4-0ea649878efa',
+        externalId: undefined,
+        name: 'Title',
+        required: true,
+        type: 'text',
+        snippetCodename: 'seo_metadata',
       },
     },
   },

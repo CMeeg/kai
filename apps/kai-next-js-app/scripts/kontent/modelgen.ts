@@ -26,8 +26,8 @@ interface KontentObject {
   codename: string
 }
 
-function createName(object: KontentObject, objectType: string) {
-  return `${textHelper.toPascalCase(object.codename)}${objectType}`
+function createName(object: KontentObject, suffix: string, prefix = '') {
+  return `${prefix}${textHelper.toPascalCase(object.codename)}${suffix}`
 }
 
 // N.B. `outputDir` needs to be relative to `process.cwd()` otherwise `generateModelsAsync` will error
@@ -39,13 +39,12 @@ const config: IGenerateModelsConfig = {
   apiKey,
   isEnterpriseSubscription: false,
   addTimestamp: false,
-  elementResolver: 'snakeCase',
   contentTypeFileResolver: (type) => createName(type, 'ContentItem'),
   contentTypeResolver: (type) => createName(type, 'ContentItem'),
   contentTypeSnippetFileResolver: (snippet) =>
     createName(snippet, 'ContentTypeSnippet'),
   contentTypeSnippetResolver: (snippet) =>
-    createName(snippet, 'ContentTypeSnippet'),
+    createName(snippet, 'ContentItem', 'Has'),
   taxonomyTypeFileResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
   taxonomyTypeResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
   outputDir

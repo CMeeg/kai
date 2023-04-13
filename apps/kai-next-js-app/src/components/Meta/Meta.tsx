@@ -2,10 +2,16 @@ import Head from 'next/head'
 
 interface MetaProps {
   title: string
-  image?: string | null
+  description?: string | null
+  openGraph: {
+    type: string
+    title: string
+    description?: string | null
+    image?: string | null
+  }
 }
 
-function Meta({ title, image }: MetaProps) {
+function Meta({ title, description, openGraph }: MetaProps) {
   return (
     <Head>
       <link
@@ -35,12 +41,18 @@ function Meta({ title, image }: MetaProps) {
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
       <meta name="theme-color" content="#000" />
+
       <title>{title}</title>
-      <meta
-        name="description"
-        content="A statically generated blog example using Next.js and Kontent.ai."
-      />
-      {image && <meta property="og:image" content={image} />}
+      {description && <meta name="description" content={description} />}
+
+      <meta property="og:type" content={openGraph.type} />
+      <meta property="og:title" content={openGraph.title} />
+      {openGraph.description && (
+        <meta property="og:description" content={openGraph.description} />
+      )}
+      {openGraph.image && (
+        <meta property="og:image" content={openGraph.image} />
+      )}
     </Head>
   )
 }

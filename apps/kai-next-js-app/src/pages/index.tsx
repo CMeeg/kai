@@ -1,13 +1,15 @@
 import type { GetStaticProps } from 'next'
 import type { RouteProps } from '~/pages/_app'
-import { Meta } from '~/components/Meta'
+import { Meta, createMetaProps } from '~/components/Meta'
 import { createLayoutProps } from '~/components/Layout'
 import { HomePage, createHomePageProps } from '~/components/HomePage'
 import type { HomePageProps } from '~/components/HomePage'
 import {
   createDeliveryClient,
+  fetchContentItem,
   fetchContentItems
 } from '~/lib/kontent/delivery-client'
+import { createHomeQuery } from '~/lib/home'
 import { createAllPostsQuery } from '~/lib/posts'
 
 type HomeRouteProps = RouteProps<HomePageProps>
@@ -15,7 +17,12 @@ type HomeRouteProps = RouteProps<HomePageProps>
 export default function HomeRoute({ meta, page }: HomeRouteProps) {
   return (
     <>
-      <Meta title={meta.title} />
+      <Meta
+        title={meta.title}
+        description={meta.description}
+        openGraph={meta.openGraph}
+      />
+
       <HomePage posts={page.posts} />
     </>
   )
@@ -24,9 +31,24 @@ export default function HomeRoute({ meta, page }: HomeRouteProps) {
 export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   preview = false
 }) => {
-  // Get posts
-
+  // Get home
   const deliveryClient = createDeliveryClient(preview)
+  const homeQuery = createHomeQuery(deliveryClient)
+  const homeResponse = await fetchContentItem(homeQuery)
+
+  if (homeResponse.error) {
+    // TODO: Deal with this error -> 500
+    throw new Error(homeResponse.error.message)
+  }
+
+  if (!homeResponse.item) {
+    // TODO: Deal with this error -> 404
+    return {
+      notFound: true
+    }
+  }
+
+  // Get posts
   const allPostsQuery = createAllPostsQuery(deliveryClient)
   const postsResponse = await fetchContentItems(allPostsQuery)
 
@@ -46,10 +68,7 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
 
   return {
     props: {
-      // TODO: Create metadata snippet and home page content type and get metadata from Kontent
-      meta: {
-        title: 'Next.js Blog Example with Kontent.ai'
-      },
+      meta: createMetaProps(homeResponse.item),
       layout: createLayoutProps(preview),
       page: createHomePageProps(postsResponse.items)
     },

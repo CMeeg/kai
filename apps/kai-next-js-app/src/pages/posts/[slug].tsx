@@ -1,6 +1,6 @@
 import type { GetStaticProps, GetStaticPaths } from 'next'
 import type { RouteProps } from '~/pages/_app'
-import { Meta } from '~/components/Meta'
+import { Meta, createMetaProps } from '~/components/Meta'
 import { createLayoutProps } from '~/components/Layout'
 import { PostPage, createPostPageProps } from '~/components/PostPage'
 import type { PostPageProps } from '~/components/PostPage'
@@ -19,7 +19,12 @@ type PostRouteProps = RouteProps<PostPageProps>
 export default function PostRoute({ meta, page }: PostRouteProps) {
   return (
     <>
-      <Meta title={meta.title} image={meta.image} />
+      <Meta
+        title={meta.title}
+        description={meta.description}
+        openGraph={meta.openGraph}
+      />
+
       <PostPage post={page.post} morePosts={page.morePosts} />
     </>
   )
@@ -76,11 +81,7 @@ export const getStaticProps: GetStaticProps<
 
   return {
     props: {
-      // TODO: Create metadata snippet and get metadata from Kontent
-      meta: {
-        title: `${post.elements.title.value} | Next.js Blog Example with Kontent.ai`,
-        image: post.elements.cover_image.value[0]?.url ?? null
-      },
+      meta: createMetaProps(post),
       layout: createLayoutProps(preview),
       page: createPostPageProps(post, morePostsResponse.items)
     },
