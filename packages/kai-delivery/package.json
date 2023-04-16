@@ -1,5 +1,5 @@
 {
-  "name": "@meeg/kai-delivery-testing-lib",
+  "name": "@meeg/kai-delivery",
   "version": "0.1.0",
   "description": "",
   "author": "Chris Meagher",
@@ -15,17 +15,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/CMeeg/kai.git",
-    "directory": "packages/kai-delivery-testing-lib"
+    "directory": "packages/kai-delivery"
   },
   "bugs": {
     "url": "https://github.com/CMeeg/kai/issues"
   },
   "homepage": "https://github.com/CMeeg/kai#readme",
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
-    "@kontent-ai/core-sdk": "^10.1.1",
     "@kontent-ai/delivery-sdk": "^12.4.3",
-    "snake-case": "^3.0.4"
+    "@meeg/kai-delivery-testing-lib": "workspace:*",
+    "uri-template": "^2.0.0"
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.29.2",
