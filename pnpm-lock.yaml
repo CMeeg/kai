@@ -96,6 +96,7 @@ importers:
       eslint: ^8.35.0
       eslint-config-prettier: ^8.6.0
       eslint-config-turbo: ^0.0.9
+      eslint-import-resolver-typescript: ^3.5.5
       eslint-plugin-import: ^2.27.5
       eslint-plugin-prettier: ^4.2.1
       eslint-plugin-storybook: ^0.6.11
@@ -105,7 +106,8 @@ importers:
       eslint: 8.35.0
       eslint-config-prettier: 8.6.0_eslint@8.35.0
       eslint-config-turbo: 0.0.9_eslint@8.35.0
-      eslint-plugin-import: 2.27.5_tqrcrxlenpngfto46ddarus52y
+      eslint-import-resolver-typescript: 3.5.5_64wccqdf7kg4xfty2ukuy32igu
+      eslint-plugin-import: 2.27.5_c3mcdzviaxspbaqbloxypgx7sa
       eslint-plugin-prettier: 4.2.1_u2zha4kiojzs42thzpgwygphmy
       eslint-plugin-storybook: 0.6.11_ycpbpc6yetojsgtrx3mwntkhsu
 
@@ -142,6 +144,7 @@ importers:
       typescript: ^4.9.5
       uri-template: ^2.0.0
       vite: ^4.1.4
+      vite-tsconfig-paths: ^4.2.0
       vitest: ^0.29.2
     dependencies:
       '@kontent-ai/delivery-sdk': 12.4.3
@@ -154,6 +157,7 @@ importers:
       tsconfig: link:../../config/tsconfig
       typescript: 4.9.5
       vite: 4.1.4_@types+node@18.14.6
+      vite-tsconfig-paths: 4.2.0_vwvfc4ezh6jlf6pa67auy3eulu
       vitest: 0.29.2
 
   packages/kai-delivery-testing-lib:
@@ -5484,8 +5488,8 @@ packages:
       '@typescript-eslint/parser': 5.54.0_ycpbpc6yetojsgtrx3mwntkhsu
       eslint: 8.35.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.3_yckic57kx266ph64dhq6ozvb54
-      eslint-plugin-import: 2.27.5_tqrcrxlenpngfto46ddarus52y
+      eslint-import-resolver-typescript: 3.5.5_64wccqdf7kg4xfty2ukuy32igu
+      eslint-plugin-import: 2.27.5_c3mcdzviaxspbaqbloxypgx7sa
       eslint-plugin-jsx-a11y: 6.7.1_eslint@8.35.0
       eslint-plugin-react: 7.32.2_eslint@8.35.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.35.0
@@ -5522,8 +5526,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /eslint-import-resolver-typescript/3.5.3_yckic57kx266ph64dhq6ozvb54:
-    resolution: {integrity: sha512-njRcKYBc3isE42LaTcJNVANR3R99H9bAxBDMNDr2W7yq5gYPxbU3MkdhsQukxZ/Xg9C2vcyLlDsbKfRDg0QvCQ==}
+  /eslint-import-resolver-typescript/3.5.5_64wccqdf7kg4xfty2ukuy32igu:
+    resolution: {integrity: sha512-TdJqPHs2lW5J9Zpe17DZNQuDnox4xo2o+0tE7Pggain9Rbc19ik8kFtXdxZ250FVx2kF4vlt2RSf4qlUpG7bhw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '*'
@@ -5532,16 +5536,20 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.12.0
       eslint: 8.35.0
-      eslint-plugin-import: 2.27.5_tqrcrxlenpngfto46ddarus52y
-      get-tsconfig: 4.4.0
+      eslint-module-utils: 2.7.4_gen7442bzofhieoowsscku4ajm
+      eslint-plugin-import: 2.27.5_c3mcdzviaxspbaqbloxypgx7sa
+      get-tsconfig: 4.5.0
       globby: 13.1.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
       synckit: 0.8.5
     transitivePeerDependencies:
+      - '@typescript-eslint/parser'
+      - eslint-import-resolver-node
+      - eslint-import-resolver-webpack
       - supports-color
 
-  /eslint-module-utils/2.7.4_igrub7c6rucg6hjc3uqgumd66y:
+  /eslint-module-utils/2.7.4_gen7442bzofhieoowsscku4ajm:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -5566,11 +5574,11 @@ packages:
       debug: 3.2.7
       eslint: 8.35.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.3_yckic57kx266ph64dhq6ozvb54
+      eslint-import-resolver-typescript: 3.5.5_64wccqdf7kg4xfty2ukuy32igu
     transitivePeerDependencies:
       - supports-color
 
-  /eslint-plugin-import/2.27.5_tqrcrxlenpngfto46ddarus52y:
+  /eslint-plugin-import/2.27.5_c3mcdzviaxspbaqbloxypgx7sa:
     resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -5588,7 +5596,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.35.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4_igrub7c6rucg6hjc3uqgumd66y
+      eslint-module-utils: 2.7.4_gen7442bzofhieoowsscku4ajm
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -6255,8 +6263,8 @@ packages:
       call-bind: 1.0.2
       get-intrinsic: 1.2.0
 
-  /get-tsconfig/4.4.0:
-    resolution: {integrity: sha512-0Gdjo/9+FzsYhXCEFueo2aY1z1tpXrxWZzP7k8ul9qt1U5o8rYJwTJYmaeHdrVosYIVYkOy2iwCJ9FdpocJhPQ==}
+  /get-tsconfig/4.5.0:
+    resolution: {integrity: sha512-MjhiaIWCJ1sAU4pIQ5i5OfOuHHxVo1oYeNsWTON7jxYkod8pHocXeh+SSbmu5OZZZK73B6cbJ2XADzXehLyovQ==}
 
   /giget/1.1.2:
     resolution: {integrity: sha512-HsLoS07HiQ5oqvObOI+Qb2tyZH4Gj5nYGfF9qQcZNrPw+uEFhdXtgJr01aO2pWadGHucajYDLxxbtQkm97ON2A==}
@@ -9591,6 +9599,19 @@ packages:
       typescript: 4.9.5
     dev: true
 
+  /tsconfck/2.1.1_typescript@4.9.5:
+    resolution: {integrity: sha512-ZPCkJBKASZBmBUNqGHmRhdhM8pJYDdOXp4nRgj/O0JwUwsMq50lCDRQP/M5GBNAA0elPrq4gAeu4dkaVCuKWww==}
+    engines: {node: ^14.13.1 || ^16 || >=18}
+    hasBin: true
+    peerDependencies:
+      typescript: ^4.3.5 || ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.9.5
+    dev: true
+
   /tsconfig-paths-webpack-plugin/3.5.2:
     resolution: {integrity: sha512-EhnfjHbzm5IYI9YPNVIxx1moxMI4bpHD2e0zTXeDNQcwjjRaGepP7IhTHJkyDBG0CAOoxRfe7jCG630Ou+C6Pw==}
     dependencies:
@@ -9966,6 +9987,23 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: true
+
+  /vite-tsconfig-paths/4.2.0_vwvfc4ezh6jlf6pa67auy3eulu:
+    resolution: {integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw==}
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+      globrex: 0.1.2
+      tsconfck: 2.1.1_typescript@4.9.5
+      vite: 4.1.4_@types+node@18.14.6
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /vite/4.1.4_@types+node@18.14.6:
