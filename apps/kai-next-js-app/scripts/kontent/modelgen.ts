@@ -26,7 +26,11 @@ interface KontentObject {
   codename: string
 }
 
-function createName(object: KontentObject, suffix: string, prefix = '') {
+function createResolverName(
+  object: KontentObject,
+  suffix: string,
+  prefix = ''
+) {
   return `${prefix}${textHelper.toPascalCase(object.codename)}${suffix}`
 }
 
@@ -39,14 +43,16 @@ const config: IGenerateModelsConfig = {
   apiKey,
   isEnterpriseSubscription: false,
   addTimestamp: false,
-  contentTypeFileResolver: (type) => createName(type, 'ContentItem'),
-  contentTypeResolver: (type) => createName(type, 'ContentItem'),
+  contentTypeFileResolver: (type) => createResolverName(type, 'ContentItem'),
+  contentTypeResolver: (type) => createResolverName(type, 'ContentItem'),
   contentTypeSnippetFileResolver: (snippet) =>
-    createName(snippet, 'ContentTypeSnippet'),
+    createResolverName(snippet, 'ContentTypeSnippet'),
   contentTypeSnippetResolver: (snippet) =>
-    createName(snippet, 'ContentItem', 'Has'),
-  taxonomyTypeFileResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
-  taxonomyTypeResolver: (taxonomy) => createName(taxonomy, 'TaxonomyGroup'),
+    createResolverName(snippet, 'ContentItem', 'Has'),
+  taxonomyTypeFileResolver: (taxonomy) =>
+    createResolverName(taxonomy, 'TaxonomyGroup'),
+  taxonomyTypeResolver: (taxonomy) =>
+    createResolverName(taxonomy, 'TaxonomyGroup'),
   outputDir
 }
 

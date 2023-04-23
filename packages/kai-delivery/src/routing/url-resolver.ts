@@ -14,7 +14,7 @@ interface ContentItemResolveUrlResolver {
   resolve(contentItem: IContentItem): IContentItem
 }
 
-interface ContentItemUrlResolverOptions {
+interface ContentItemUrlResolverConfig {
   [key: string]: ContentItemTemplateUrlResolver | ContentItemResolveUrlResolver
 }
 
@@ -50,7 +50,7 @@ function resolveContentItemUrlTemplate(
 
 function resolveContentItemUrl(
   contentItem: IContentItem,
-  options: ContentItemUrlResolverOptions
+  config: ContentItemUrlResolverConfig
 ): string | null {
   if (!contentItem) {
     return null
@@ -59,7 +59,7 @@ function resolveContentItemUrl(
   // Try to get a resolver for this content type
 
   const contentType = contentItem.system.type
-  const urlResolver = options[contentType]
+  const urlResolver = config[contentType]
 
   if (!urlResolver) {
     // No resolver found
@@ -72,7 +72,7 @@ function resolveContentItemUrl(
 
     const resolveContentItem = urlResolver.resolve(contentItem)
 
-    return resolveContentItemUrl(resolveContentItem, options)
+    return resolveContentItemUrl(resolveContentItem, config)
   }
 
   if ('template' in urlResolver) {
@@ -89,11 +89,11 @@ function resolveContentItemUrl(
 }
 
 function contentItemUrlResolver(
-  options: ContentItemUrlResolverOptions
+  config: ContentItemUrlResolverConfig
 ): ContentItemUrlResolver {
   return {
     resolve: (contentItem: IContentItem) =>
-      resolveContentItemUrl(contentItem, options)
+      resolveContentItemUrl(contentItem, config)
   }
 }
 
@@ -101,7 +101,7 @@ export { contentItemUrlResolver }
 
 export type {
   ContentItemUrlResolver,
-  ContentItemUrlResolverOptions,
+  ContentItemUrlResolverConfig,
   ContentItemTemplateUrlResolver,
   ContentItemTemplateUrlParams,
   ContentItemResolveUrlResolver

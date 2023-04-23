@@ -3,10 +3,11 @@ import type {
   IContentItem,
   Responses,
   Contracts,
-  IContentItemSystemAttributes
+  IContentItemSystemAttributes,
+  IContentItemsContainer
 } from '@kontent-ai/delivery-sdk'
 import type { ContentItemUrlResolver } from '~/routing'
-import {
+import type {
   KaiContentItem,
   KaiContentItemSystemAttributes
 } from './kai-content-item'
@@ -24,7 +25,7 @@ type ViewContentItemResponse<T extends IContentItem> = IDeliveryNetworkResponse<
 
 function resolveSystemAttributes<T extends IContentItemSystemAttributes>(
   system: KaiContentItemSystemAttributes<T>
-) {
+): void {
   system.kai = { isComponent: system.name === system.id }
 }
 
@@ -34,8 +35,8 @@ function resolveContentItem<T extends IContentItem>(
 ): KaiContentItem<T> {
   const kaiContentItem = contentItem as KaiContentItem<T>
 
-  // TODO: This seems wrong to be forcing the type like this!
   resolveSystemAttributes(
+    // TODO: This seems wrong to be forcing the type like this!
     kaiContentItem.system as KaiContentItemSystemAttributes<
       typeof contentItem.system
     >
@@ -58,11 +59,25 @@ function resolveContentItems<T extends IContentItem>(
   )
 }
 
+function resolveLinkedItems(
+  linkedItems: IContentItemsContainer,
+  options: ContentItemResponseResolverOptions
+) {
+  // TODO: Mutation is convenient and easy, but doesn't feel "right"
+  const codenames = Object.keys(linkedItems)
+
+  for (let i = 0; i < codenames.length; i++) {
+    const linkedItem = linkedItems[codenames[i]]
+
+    resolveContentItem(linkedItem, options)
+  }
+}
+
 function resolveItemResponse<T extends IContentItem>(
   response: ViewContentItemResponse<T>,
   options: ContentItemResponseResolverOptions
 ): KaiContentItem<T> {
-  // TODO: Resolve `response.data.linkedItems`
+  resolveLinkedItems(response.data.linkedItems, options)
 
   return resolveContentItem(response.data.item, options)
 }
@@ -71,7 +86,7 @@ function resolveItemsResponse<T extends IContentItem>(
   response: ListContentItemsResponse<T>,
   options: ContentItemResponseResolverOptions
 ): KaiContentItem<T>[] {
-  // TODO: Resolve `response.data.linkedItems`
+  resolveLinkedItems(response.data.linkedItems, options)
 
   return resolveContentItems(response.data.items, options)
 }

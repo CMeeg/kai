@@ -3,15 +3,17 @@ import Head from 'next/head'
 interface MetaProps {
   title: string
   description?: string | null
+  canonical?: string | null
   openGraph: {
     type: string
     title: string
     description?: string | null
     image?: string | null
+    url?: string | null
   }
 }
 
-function Meta({ title, description, openGraph }: MetaProps) {
+function Meta({ title, description, canonical, openGraph }: MetaProps) {
   return (
     <Head>
       <link
@@ -44,6 +46,7 @@ function Meta({ title, description, openGraph }: MetaProps) {
 
       <title>{title}</title>
       {description && <meta name="description" content={description} />}
+      {canonical && <link rel="canonical" href={canonical} />}
 
       <meta property="og:type" content={openGraph.type} />
       <meta property="og:title" content={openGraph.title} />
@@ -53,6 +56,7 @@ function Meta({ title, description, openGraph }: MetaProps) {
       {openGraph.image && (
         <meta property="og:image" content={openGraph.image} />
       )}
+      {openGraph.url && <meta property="og:url" content={openGraph.url} />}
     </Head>
   )
 }

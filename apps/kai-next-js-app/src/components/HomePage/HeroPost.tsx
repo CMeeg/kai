@@ -16,16 +16,20 @@ function HeroPost({ post }: HeroPostProps) {
           <CoverImage
             title={post.title}
             image={post.coverImage}
-            slug={post.slug}
+            url={post.url}
           />
         )}
       </div>
       <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-8 mb-20 md:mb-28">
         <div>
           <h3 className="mb-4 text-4xl lg:text-6xl leading-tight">
-            <Link href={`/posts/${post.slug}`} className="hover:underline">
-              {post.title}
-            </Link>
+            {post.url ? (
+              <Link href={post.url} className="hover:underline">
+                {post.title}
+              </Link>
+            ) : (
+              post.title
+            )}
           </h3>
           <div className="mb-4 md:mb-0 text-lg">
             <PostDate dateString={post.date} />

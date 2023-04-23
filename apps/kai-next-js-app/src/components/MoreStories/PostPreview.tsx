@@ -14,16 +14,20 @@ function PostPreview({ post }: PostPreviewProps) {
       {post.coverImage && (
         <div className="mb-5">
           <CoverImage
-            slug={post.slug}
+            url={post.url}
             title={post.title}
             image={post.coverImage}
           />
         </div>
       )}
       <h3 className="text-3xl mb-3 leading-snug">
-        <Link href={`/posts/${post.slug}`} className="hover:underline">
-          {post.title}
-        </Link>
+        {post.url ? (
+          <Link href={post.url} className="hover:underline">
+            {post.title}
+          </Link>
+        ) : (
+          post.title
+        )}
       </h3>
       <div className="text-lg mb-4">
         <PostDate dateString={post.date} />

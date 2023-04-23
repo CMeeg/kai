@@ -1,3 +1,4 @@
+import type { KaiContentItem } from '@meeg/kai-delivery'
 import type { AuthorContentItem, PostContentItem } from '~/lib/kontent/models'
 import { createImageFromAsset } from '~/lib/media'
 import type { ImageAsset } from '~/lib/media'
@@ -10,7 +11,7 @@ interface Author {
 
 interface Post {
   title: string
-  slug: string
+  url: string | null
   date: string | null
   content: string
   excerpt: string
@@ -33,10 +34,10 @@ function createAuthor(contentItem: AuthorContentItem): Author | null {
   }
 }
 
-function createPost(contentItem: PostContentItem): Post {
+function createPost(contentItem: KaiContentItem<PostContentItem>): Post {
   return {
     title: contentItem.elements.title.value,
-    slug: contentItem.elements.slug.value,
+    url: contentItem.kai.url || null,
     date: contentItem.elements.date.value,
     content: contentItem.elements.content.value,
     excerpt: contentItem.elements.excerpt.value,
@@ -45,10 +46,12 @@ function createPost(contentItem: PostContentItem): Post {
   }
 }
 
-function createPostSummary(contentItem: PostContentItem): PostSummary {
+function createPostSummary(
+  contentItem: KaiContentItem<PostContentItem>
+): PostSummary {
   return {
     title: contentItem.elements.title.value,
-    slug: contentItem.elements.slug.value,
+    url: contentItem.kai.url || null,
     date: contentItem.elements.date.value,
     excerpt: contentItem.elements.excerpt.value,
     coverImage: createImageFromAsset(contentItem.elements.cover_image.value[0]),
@@ -57,8 +60,8 @@ function createPostSummary(contentItem: PostContentItem): PostSummary {
 }
 
 function createPostPageProps(
-  postItem: PostContentItem,
-  morePostsItems: PostContentItem[]
+  postItem: KaiContentItem<PostContentItem>,
+  morePostsItems: KaiContentItem<PostContentItem>[]
 ): PostPageProps {
   return {
     post: createPost(postItem),

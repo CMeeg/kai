@@ -3,11 +3,7 @@ import type { RouteProps } from '~/pages/_app'
 import { Meta } from '~/components/Meta'
 import { HomePage } from '~/components/HomePage'
 import type { HomePageProps } from '~/components/HomePage'
-import {
-  createDeliveryClient,
-  fetchContentItem,
-  fetchContentItems
-} from '~/lib/kontent/delivery-client'
+import { createKontentApi } from '~/lib/kontent/delivery-client'
 import { createMetaProps } from '~/lib/seo'
 import { createLayoutProps } from '~/lib/layout'
 import { createHomeQuery, createHomePageProps } from '~/lib/home'
@@ -32,17 +28,17 @@ export default function HomeRoute({ meta, page }: HomeRouteProps) {
 export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   preview = false
 }) => {
-  // Get home
-  const deliveryClient = createDeliveryClient(preview)
-  const homeQuery = createHomeQuery(deliveryClient)
-  const homeResponse = await fetchContentItem(homeQuery)
+  const kontentApi = createKontentApi(preview)
 
-  if (homeResponse.error) {
+  // Get home
+  const homeQueryResult = await kontentApi.fetchItem(createHomeQuery)
+
+  if (homeQueryResult.error) {
     // TODO: Deal with this error -> 500
-    throw new Error(homeResponse.error.message)
+    throw new Error(homeQueryResult.error.message)
   }
 
-  if (!homeResponse.item) {
+  if (!homeQueryResult.item) {
     // TODO: Deal with this error -> 404
     return {
       notFound: true
@@ -50,15 +46,14 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
   }
 
   // Get posts
-  const allPostsQuery = createAllPostsQuery(deliveryClient)
-  const postsResponse = await fetchContentItems(allPostsQuery)
+  const allPostsQueryResult = await kontentApi.fetchItems(createAllPostsQuery)
 
-  if (postsResponse.error) {
+  if (allPostsQueryResult.error) {
     // TODO: Deal with this error -> 500
-    throw new Error(postsResponse.error.message)
+    throw new Error(allPostsQueryResult.error.message)
   }
 
-  if (!postsResponse.items) {
+  if (!allPostsQueryResult.items) {
     // TODO: Deal with this error -> 404
     return {
       notFound: true
@@ -69,9 +64,9 @@ export const getStaticProps: GetStaticProps<HomeRouteProps> = async ({
 
   return {
     props: {
-      meta: createMetaProps(homeResponse.item),
+      meta: createMetaProps(homeQueryResult.item),
       layout: createLayoutProps(preview),
-      page: createHomePageProps(postsResponse.items)
+      page: createHomePageProps(allPostsQueryResult.items)
     },
     revalidate: 600
   }

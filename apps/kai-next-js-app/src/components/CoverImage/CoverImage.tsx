@@ -6,10 +6,10 @@ import type { ImageAsset } from '~/lib/media'
 interface CoverImageProps {
   title: string
   image: ImageAsset
-  slug?: string
+  url?: string | null
 }
 
-function CoverImage({ title, image, slug }: CoverImageProps) {
+function CoverImage({ title, image, url }: CoverImageProps) {
   const imageComponent = (
     <Image
       width={2000}
@@ -17,14 +17,14 @@ function CoverImage({ title, image, slug }: CoverImageProps) {
       alt={image.alt}
       src={image.url}
       className={cn('shadow-small', {
-        'hover:shadow-medium transition-shadow duration-200': slug
+        'hover:shadow-medium transition-shadow duration-200': url
       })}
     />
   )
   return (
     <div className="sm:mx-0">
-      {slug ? (
-        <Link href={`/posts/${slug}`} aria-label={title}>
+      {url ? (
+        <Link href={url} aria-label={title}>
           {imageComponent}
         </Link>
       ) : (

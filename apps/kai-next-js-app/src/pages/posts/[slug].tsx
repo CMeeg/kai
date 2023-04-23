@@ -3,10 +3,7 @@ import type { RouteProps } from '~/pages/_app'
 import { Meta } from '~/components/Meta'
 import { PostPage } from '~/components/PostPage'
 import type { PostPageProps } from '~/components/PostPage'
-import {
-  createDeliveryClient,
-  fetchContentItems
-} from '~/lib/kontent/delivery-client'
+import { createKontentApi } from '~/lib/kontent/delivery-client'
 import { createMetaProps } from '~/lib/seo'
 import { createLayoutProps } from '~/lib/layout'
 import {
@@ -49,35 +46,38 @@ export const getStaticProps: GetStaticProps<
     throw new Error(`'slug' param not provided.`)
   }
 
+  const kontentApi = createKontentApi(preview)
+
   // Get the post
 
-  const deliveryClient = createDeliveryClient(preview)
-  const postsWithSlugQuery = createPostsWithSlugQuery(deliveryClient, slug)
-  const postsResponse = await fetchContentItems(postsWithSlugQuery)
+  const postsWithSlugResult = await kontentApi.fetchItems((client) =>
+    createPostsWithSlugQuery(client, slug)
+  )
 
-  if (postsResponse.error) {
+  if (postsWithSlugResult.error) {
     // TODO: Deal with this error -> 500
-    throw new Error(postsResponse.error.message)
+    throw new Error(postsWithSlugResult.error.message)
   }
 
-  if (!postsResponse.items) {
+  if (!postsWithSlugResult.items) {
     // TODO: Deal with this error -> 404
     return {
       notFound: true
     }
   }
 
-  if (postsResponse.items.length > 1) {
+  if (postsWithSlugResult.items.length > 1) {
     // TODO: Deal with this error -> 500
     throw new Error(`There is more than post with the slug '${slug}'.`)
   }
 
-  const post = postsResponse.items[0]
+  const post = postsWithSlugResult.items[0]
 
   // Get more posts
 
-  const morePostsQuery = createMorePostsForSlugQuery(deliveryClient, slug)
-  const morePostsResponse = await fetchContentItems(morePostsQuery)
+  const morePostsForSlugResult = await kontentApi.fetchItems((client) =>
+    createMorePostsForSlugQuery(client, slug)
+  )
 
   // Map response data and return props
 
@@ -85,23 +85,27 @@ export const getStaticProps: GetStaticProps<
     props: {
       meta: createMetaProps(post),
       layout: createLayoutProps(preview),
-      page: createPostPageProps(post, morePostsResponse.items)
+      page: createPostPageProps(post, morePostsForSlugResult.items)
     },
     revalidate: 600
   }
 }
 
 export const getStaticPaths: GetStaticPaths<PostRouteParams> = async () => {
-  const deliveryClient = createDeliveryClient()
-  const slugsQuery = createAllPostsSlugsQuery(deliveryClient)
-  const slugsResponse = await fetchContentItems(slugsQuery)
+  const kontentApi = createKontentApi()
 
-  if (slugsResponse.error) {
+  const allPostsSlugsResult = await kontentApi.fetchItems(
+    createAllPostsSlugsQuery
+  )
+
+  if (allPostsSlugsResult.error) {
     // TODO: Deal with this error -> 500
-    throw new Error(slugsResponse.error.message)
+    throw new Error(allPostsSlugsResult.error.message)
   }
 
-  const slugs = slugsResponse.items.map((item) => item.elements.slug.value)
+  const slugs = allPostsSlugsResult.items.map(
+    (item) => item.elements.slug.value
+  )
 
   return {
     paths: slugs.map((slug) => {
