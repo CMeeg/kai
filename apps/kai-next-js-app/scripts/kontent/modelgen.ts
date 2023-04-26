@@ -10,9 +10,9 @@ const projectDir = process.cwd()
 dotenv.config({ path: path.resolve(projectDir, '.env.local') })
 dotenv.config({ path: path.resolve(projectDir, '.env') })
 
-const projectId = process.env.PRIVATE_KONTENT_PROJECT_ID
-if (!projectId) {
-  throw 'Env var PRIVATE_KONTENT_PROJECT_ID not found.'
+const environmentId = process.env.PRIVATE_KONTENT_ENV_ID
+if (!environmentId) {
+  throw 'Env var PRIVATE_KONTENT_ENV_ID not found.'
 }
 
 const apiKey = process.env.PRIVATE_KONTENT_MANAGEMENT_API_KEY
@@ -39,7 +39,7 @@ const outputDir = './src/lib/kontent/models/_generated'
 
 const config: IGenerateModelsConfig = {
   sdkType: 'delivery',
-  projectId,
+  projectId: environmentId,
   apiKey,
   isEnterpriseSubscription: false,
   addTimestamp: false,

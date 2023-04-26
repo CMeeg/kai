@@ -8,7 +8,7 @@ import { createHttpServiceWithData } from './test-http-service-factory'
 
 function createDefaultDeliveryClientConfig(): IDeliveryClientConfig {
   return {
-    projectId: faker.datatype.uuid()
+    environmentId: faker.datatype.uuid()
   }
 }
 

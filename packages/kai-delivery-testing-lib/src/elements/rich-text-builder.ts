@@ -15,7 +15,7 @@ interface RichTextElementBuilderState {
   links: Contracts.IRichTextElementLinkWrapperContract
   modularContent: string[]
   htmlEntries: string[]
-  projectId: string
+  environmentId: string
   isPreview: boolean
   projectLocation: ProjectDataCenterLocation
   onAddModularContent?: (
@@ -87,7 +87,7 @@ function appendImage(
     image.assetHeight ?? faker.datatype.number({ min: 1, max: 3200 })
 
   const assetUrl = createAssetUrl({
-    projectId: state.projectId,
+    environmentId: state.environmentId,
     assetId: image.assetId ?? faker.datatype.uuid(),
     assetFileName: image.assetFileName,
     isPreview: state.isPreview,
@@ -173,7 +173,7 @@ function clear(state: RichTextElementBuilderState) {
 }
 
 interface RichTextElementBuilderOptions {
-  projectId?: string
+  environmentId?: string
   isPreview?: boolean
   projectLocation?: ProjectDataCenterLocation
   onAddModularContent?: (
@@ -212,7 +212,7 @@ function richTextElementBuilder(options?: RichTextElementBuilderOptions) {
     links: {},
     modularContent: [],
     htmlEntries: [],
-    projectId: options?.projectId ?? faker.datatype.uuid(),
+    environmentId: options?.environmentId ?? faker.datatype.uuid(),
     isPreview: options?.isPreview ?? false,
     projectLocation:
       options?.projectLocation ?? defaultProjectDataCenterLocation,

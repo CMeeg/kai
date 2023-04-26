@@ -5,7 +5,7 @@ import { createAssetUrl } from './url-factory'
 describe('createAssetUrl', () => {
   test('should have preview hostname when isPreview', () => {
     const assetUrl = createAssetUrl({
-      projectId: faker.datatype.uuid(),
+      environmentId: faker.datatype.uuid(),
       assetId: faker.datatype.uuid(),
       assetFileName: 'test.png',
       isPreview: true
@@ -16,7 +16,7 @@ describe('createAssetUrl', () => {
 
   test('should not have preview hostname when not isPreview', () => {
     const assetUrl = createAssetUrl({
-      projectId: faker.datatype.uuid(),
+      environmentId: faker.datatype.uuid(),
       assetId: faker.datatype.uuid(),
       assetFileName: 'test.png'
     })

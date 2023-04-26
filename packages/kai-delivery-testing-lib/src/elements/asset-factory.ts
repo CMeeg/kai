@@ -13,7 +13,7 @@ type ContentItemAssetElement = PartialExceptFor<
 
 function createAssetValue(
   asset: ContentItemAssetElement,
-  projectId: string,
+  environmentId: string,
   isPreview: boolean,
   projectLocation: ProjectDataCenterLocation
 ) {
@@ -22,7 +22,7 @@ function createAssetValue(
   const type = asset.type ? asset.type.toLowerCase() : 'image/png'
   const size = asset.size || faker.datatype.number({ min: 1, max: 100000 })
   const url = createAssetUrl({
-    projectId,
+    environmentId,
     assetId: faker.datatype.uuid(),
     assetFileName: name,
     isPreview,
@@ -50,7 +50,7 @@ function createAssetValue(
 
 function createAssetValues(
   assets: ContentItemAssetElement[],
-  projectId: string,
+  environmentId: string,
   isPreview: boolean,
   projectLocation: ProjectDataCenterLocation
 ) {
@@ -59,14 +59,14 @@ function createAssetValues(
   }
 
   return assets.map((asset) =>
-    createAssetValue(asset, projectId, isPreview, projectLocation)
+    createAssetValue(asset, environmentId, isPreview, projectLocation)
   )
 }
 
 interface CreateAssetElementOptions {
   name: string
   assets: ContentItemAssetElement[]
-  projectId: string
+  environmentId: string
   isPreview?: boolean
   projectLocation?: ProjectDataCenterLocation
 }
@@ -80,7 +80,7 @@ function createAssetElement(
 
   const value = createAssetValues(
     options.assets,
-    options.projectId,
+    options.environmentId,
     isPreview,
     projectLocation
   )

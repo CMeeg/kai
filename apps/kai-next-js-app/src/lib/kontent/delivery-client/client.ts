@@ -15,7 +15,7 @@ import { routeConfig } from '~/lib/kontent/routing'
 
 function createDeliveryClient(preview = false) {
   const config: IDeliveryClientConfig = {
-    projectId: process.env.PRIVATE_KONTENT_PROJECT_ID ?? ''
+    environmentId: process.env.PRIVATE_KONTENT_ENV_ID ?? ''
   }
 
   if (preview) {

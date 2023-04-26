@@ -14,7 +14,7 @@ const assetHostname: AssetHostNames = {
 }
 
 interface CreateAssetUrlOptions {
-  projectId: string
+  environmentId: string
   assetId: string
   assetFileName: string
   isPreview?: boolean
@@ -32,7 +32,7 @@ function createAssetUrl(options: CreateAssetUrlOptions) {
     ? `https://preview-${hostname}`
     : `https://${hostname}`
 
-  return `${baseUrl}/${options.projectId}/${options.assetId}/${urlEncode(
+  return `${baseUrl}/${options.environmentId}/${options.assetId}/${urlEncode(
     options.assetFileName
   )}`
 }

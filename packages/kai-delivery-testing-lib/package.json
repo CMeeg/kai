@@ -24,7 +24,7 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@kontent-ai/core-sdk": "^10.1.1",
-    "@kontent-ai/delivery-sdk": "^12.4.3",
+    "@kontent-ai/delivery-sdk": "^14.0.1",
     "snake-case": "^3.0.4"
   },
   "devDependencies": {

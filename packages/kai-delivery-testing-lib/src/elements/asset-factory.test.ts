@@ -7,7 +7,7 @@ describe('createAssetElement', () => {
     const assetElement = createAssetElement({
       name: 'Assets',
       assets: [],
-      projectId: faker.datatype.uuid()
+      environmentId: faker.datatype.uuid()
     })
 
     const assets = assetElement.value
@@ -28,7 +28,7 @@ describe('createAssetElement', () => {
           type: 'text/plain'
         }
       ],
-      projectId: faker.datatype.uuid()
+      environmentId: faker.datatype.uuid()
     })
 
     const assets = assetElement.value

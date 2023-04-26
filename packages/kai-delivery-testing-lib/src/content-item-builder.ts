@@ -84,7 +84,7 @@ function setAssetElement(
   const value = createAssetElement({
     name,
     assets,
-    projectId: state.projectId,
+    environmentId: state.environmentId,
     isPreview: !isPublished(state),
     projectLocation: state.projectLocation
   })
@@ -192,7 +192,7 @@ function setRichTextElement(
   codename?: string
 ) {
   const builder = richTextElementBuilder({
-    projectId: state.projectId,
+    environmentId: state.environmentId,
     isPreview: !isPublished(state),
     projectLocation: state.projectLocation,
     onAddModularContent: (contentItem: Contracts.IViewContentItemContract) =>
@@ -280,7 +280,7 @@ function createContentItem(state: ContentItemBuilderState) {
 }
 
 interface ContentItemBuilderState {
-  projectId: string
+  environmentId: string
   projectLocation: ProjectDataCenterLocation
   system: Contracts.IContentItemSystemAttributesContract
   elements: Contracts.IContentItemElementsContracts
@@ -288,7 +288,7 @@ interface ContentItemBuilderState {
 }
 
 interface ContentItemBuilderOptions {
-  projectId?: string
+  environmentId?: string
   projectLocation?: ProjectDataCenterLocation
 }
 
@@ -340,7 +340,7 @@ interface ContentItemBuilder {
 
 function contentItemBuilder(options?: ContentItemBuilderOptions) {
   const state: ContentItemBuilderState = {
-    projectId: options?.projectId ?? faker.datatype.uuid(),
+    environmentId: options?.environmentId ?? faker.datatype.uuid(),
     projectLocation:
       options?.projectLocation ?? projectDataCenterLocation.netherlands,
     system: createDefaultSystemData(),
