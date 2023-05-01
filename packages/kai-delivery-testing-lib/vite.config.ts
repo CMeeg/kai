@@ -1,13 +1,12 @@
 /// <reference types="vite/client" />
 /// <reference types="vitest" />
 
-import { defineConfig } from 'vite'
+import { defineProject } from 'vitest/config'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig({
+export default defineProject({
+  plugins: [tsconfigPaths()],
   test: {
-    environment: 'node',
-    coverage: {
-      reporter: ['text', 'json', 'html']
-    }
+    environment: 'node'
   }
 })
