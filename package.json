@@ -8,6 +8,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "package:delivery": "pnpm --dir \"packages/kai-delivery\"",
+    "package:rich-text": "pnpm --dir \"packages/kai-rich-text\"",
     "package:testing-lib": "pnpm --dir \"packages/kai-delivery-testing-lib\"",
     "storybook": "turbo run storybook",
     "test": "turbo run test",

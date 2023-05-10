@@ -1,0 +1,42 @@
+{
+  "name": "@meeg/kai-rich-text",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Chris Meagher",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --ext .ts src",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "ts:check": "tsc --noEmit"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CMeeg/kai.git",
+    "directory": "packages/kai-rich-text"
+  },
+  "bugs": {
+    "url": "https://github.com/CMeeg/kai/issues"
+  },
+  "homepage": "https://github.com/CMeeg/kai#readme",
+  "dependencies": {
+    "@kontent-ai/delivery-sdk": "^14.0.1",
+    "@meeg/kai-delivery-testing-lib": "workspace:*",
+    "rehype-parse": "^8.0.4",
+    "unified": "^10.1.2",
+    "unist-util-visit": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/hast": "^2.3.4",
+    "@types/unist": "^2.0.6",
+    "eslint": "^8.35.0",
+    "eslint-config-kai": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.3",
+    "vitest": "^0.30.1",
+    "vite-tsconfig-paths": "^4.2.0"
+  }
+}
