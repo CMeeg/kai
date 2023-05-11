@@ -5,34 +5,41 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import type { KastRoot } from './kast'
+import { kastNodeType } from '~/kast'
+import type { KastHeading, KastRoot } from '~/kast'
 
-const allowedRichTextHtmlElements = [
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'ol',
-  'ul',
-  'li',
-  'figure',
-  'img',
-  'table',
-  'tbody',
-  'tr',
-  'td',
-  'object',
-  'strong',
-  'em',
-  'sup',
-  'sub',
-  'code',
-  'a',
-  'br'
-]
+const htmlTagName = {
+  h1: 'h1',
+  h2: 'h2',
+  h3: 'h3',
+  h4: 'h4',
+  h5: 'h5',
+  h6: 'h6',
+  p: 'p',
+  ol: 'ol',
+  ul: 'ul',
+  li: 'li',
+  figure: 'figure',
+  img: 'img',
+  table: 'table',
+  tbody: 'tbody',
+  tr: 'tr',
+  td: 'td',
+  object: 'object',
+  strong: 'strong',
+  em: 'em',
+  sup: 'sup',
+  sub: 'sub',
+  code: 'code',
+  a: 'a',
+  br: 'br'
+} as const
+
+type HtmlTagName = keyof typeof htmlTagName
+
+function isAllowedHtmlTag(tagName: string): tagName is HtmlTagName {
+  return !!Object.values(htmlTagName).find((htmlTag) => tagName === htmlTag)
+}
 
 const hastNodeType = {
   comment: 'comment',
@@ -73,12 +80,37 @@ function transformRootNode(root: HastRoot): VisitorResult {
   delete root.data
 }
 
+function transformHeadingElement(element: HastElement) {
+  const { tagName } = element
+
+  const level = parseInt(tagName.substring(1))
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const heading = element as unknown as KastHeading
+  heading.type = kastNodeType.heading
+  heading.level = level
+}
+
+const elementTransformer: Partial<
+  Record<HtmlTagName, (element: HastElement) => void>
+> = {
+  [htmlTagName.h1]: transformHeadingElement,
+  [htmlTagName.h2]: transformHeadingElement,
+  [htmlTagName.h3]: transformHeadingElement,
+  [htmlTagName.h4]: transformHeadingElement,
+  [htmlTagName.h5]: transformHeadingElement,
+  [htmlTagName.h6]: transformHeadingElement
+}
+
 function transformElementNode(
   element: HastElement,
   index: number | null,
   parent: HastRoot | HastElement | null
 ): VisitorResult {
-  if (!allowedRichTextHtmlElements.includes(element.tagName.toLowerCase())) {
+  if (!isAllowedHtmlTag(element.tagName)) {
     // This element is not allowed in Kontent Rich text fields so we will replace it with its children - see https://unifiedjs.com/learn/recipe/remove-node/
 
     return replaceElementWithChildren(element, index, parent)
@@ -86,11 +118,18 @@ function transformElementNode(
 
   // We don't need position
   delete element.position
+
+  // Transform based on the element's tagName
+  const transformer = elementTransformer[element.tagName]
+  if (transformer) {
+    transformer(element)
+  }
 }
 
 function transformTextNode(text: HastText): VisitorResult {
-  // We don't need position
+  // We don't need position or data
   delete text.position
+  delete text.data
 }
 
 function hastToKast() {

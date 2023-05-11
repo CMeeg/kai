@@ -1,0 +1,10 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "heading",
+      "level": 1,
+      "children": [{ "type": "text", "value": "Heading 1" }]
+    }
+  ]
+}
