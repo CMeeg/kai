@@ -5,8 +5,17 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import { kastNodeType } from '~/kast'
-import type { KastHeading, KastRoot } from '~/kast'
+import { kastNodeType, kastListType } from '~/kast'
+import type {
+  KastRoot,
+  KastHeading,
+  KastParagraph,
+  KastList,
+  KastListItem,
+  KastTable,
+  KastTableRow,
+  KastTableCell
+} from '~/kast'
 
 const htmlTagName = {
   h1: 'h1',
@@ -51,10 +60,15 @@ const hastNodeType = {
 
 function replaceElementWithChildren(
   element: HastElement,
-  index: number | null,
-  parent: HastRoot | HastElement | null
+  index?: number | null,
+  parent?: HastRoot | HastElement | null
 ): VisitorResult {
-  if (index !== null && parent !== null) {
+  if (
+    typeof index !== 'undefined' &&
+    index !== null &&
+    typeof parent !== 'undefined' &&
+    parent !== null
+  ) {
     parent.children.splice(index, 1, ...element.children)
 
     // Skip this node and continue traversing
@@ -80,7 +94,13 @@ function transformRootNode(root: HastRoot): VisitorResult {
   delete root.data
 }
 
-function transformHeadingElement(element: HastElement) {
+type ElementTransformer = (
+  element: HastElement,
+  index?: number | null,
+  parent?: HastRoot | HastElement | null
+) => VisitorResult
+
+const transformHeadingElement: ElementTransformer = (element) => {
   const { tagName } = element
 
   const level = parseInt(tagName.substring(1))
@@ -94,15 +114,88 @@ function transformHeadingElement(element: HastElement) {
   heading.level = level
 }
 
+const transformParagraphElement: ElementTransformer = (element) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const paragraph = element as unknown as KastParagraph
+  paragraph.type = kastNodeType.paragraph
+}
+
+const transformListElement: ElementTransformer = (element) => {
+  const { tagName } = element
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const list = element as unknown as KastList
+  list.type = kastNodeType.list
+  list.listType =
+    tagName === 'ol' ? kastListType.ordered : kastListType.unordered
+}
+
+const transformListItemElement: ElementTransformer = (element) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const listItem = element as unknown as KastListItem
+  listItem.type = kastNodeType.listItem
+}
+
+const transformTableElement: ElementTransformer = (element) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const table = element as unknown as KastTable
+  table.type = kastNodeType.table
+}
+
+const transformTableRowElement: ElementTransformer = (element) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const tableRow = element as unknown as KastTableRow
+  tableRow.type = kastNodeType.tableRow
+}
+
+const transformTableCellElement: ElementTransformer = (element) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const tableCell = element as unknown as KastTableCell
+  tableCell.type = kastNodeType.tableCell
+}
+
 const elementTransformer: Partial<
-  Record<HtmlTagName, (element: HastElement) => void>
+  Record<
+    HtmlTagName,
+    (
+      element: HastElement,
+      index?: number | null,
+      parent?: HastRoot | HastElement | null
+    ) => VisitorResult
+  >
 > = {
   [htmlTagName.h1]: transformHeadingElement,
   [htmlTagName.h2]: transformHeadingElement,
   [htmlTagName.h3]: transformHeadingElement,
   [htmlTagName.h4]: transformHeadingElement,
   [htmlTagName.h5]: transformHeadingElement,
-  [htmlTagName.h6]: transformHeadingElement
+  [htmlTagName.h6]: transformHeadingElement,
+  [htmlTagName.p]: transformParagraphElement,
+  [htmlTagName.ol]: transformListElement,
+  [htmlTagName.ul]: transformListElement,
+  [htmlTagName.li]: transformListItemElement,
+  [htmlTagName.table]: transformTableElement,
+  [htmlTagName.tbody]: replaceElementWithChildren,
+  [htmlTagName.tr]: transformTableRowElement,
+  [htmlTagName.td]: transformTableCellElement
 }
 
 function transformElementNode(
@@ -122,7 +215,7 @@ function transformElementNode(
   // Transform based on the element's tagName
   const transformer = elementTransformer[element.tagName]
   if (transformer) {
-    transformer(element)
+    return transformer(element, index, parent)
   }
 }
 

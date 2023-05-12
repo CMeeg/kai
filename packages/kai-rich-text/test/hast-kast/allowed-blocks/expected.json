@@ -1,0 +1,106 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "heading",
+      "level": 1,
+      "children": [{ "type": "text", "value": "Heading 1" }]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [{ "type": "text", "value": "Heading 2" }]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [{ "type": "text", "value": "Heading 3" }]
+    },
+    {
+      "type": "heading",
+      "level": 4,
+      "children": [{ "type": "text", "value": "Heading 4" }]
+    },
+    {
+      "type": "heading",
+      "level": 5,
+      "children": [{ "type": "text", "value": "Heading 5" }]
+    },
+    {
+      "type": "heading",
+      "level": 6,
+      "children": [{ "type": "text", "value": "Heading 6" }]
+    },
+    {
+      "type": "paragraph",
+      "children": [{ "type": "text", "value": "Paragraph" }]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "listItem",
+          "children": [{ "type": "text", "value": "Item 1" }]
+        },
+        {
+          "type": "listItem",
+          "children": [{ "type": "text", "value": "Item 2" }]
+        }
+      ],
+      "listType": "ordered"
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "listItem",
+          "children": [{ "type": "text", "value": "Item 1" }]
+        },
+        {
+          "type": "listItem",
+          "children": [{ "type": "text", "value": "Item 2" }]
+        }
+      ],
+      "listType": "unordered"
+    },
+    {
+      "type": "table",
+      "children": [
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "A" }]
+            },
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "B" }]
+            },
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "C" }]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "X" }]
+            },
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "Y" }]
+            },
+            {
+              "type": "tableCell",
+              "children": [{ "type": "text", "value": "Z" }]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk'
 import { unified } from 'unified'
 import rehypeParse from 'rehype-parse'
+import rehypeMinifyWhitespace from 'rehype-minify-whitespace'
 import { hastToKast } from './hast-kast'
 import type { KastRoot } from './kast'
 
@@ -20,7 +21,10 @@ function createRichTextKastResolver(): RichTextKastResolver {
         .use(rehypeParse, { fragment: true })
         .parse(element.value)
 
-      return await unified().use(hastToKast).run(hast)
+      return await unified()
+        .use(rehypeMinifyWhitespace)
+        .use(hastToKast)
+        .run(hast)
     }
   }
 }
