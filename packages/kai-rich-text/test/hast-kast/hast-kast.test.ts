@@ -9,7 +9,7 @@ describe('hastToKast', () => {
   test('sandbox', async (ctx) => {
     const fixture = createFixture(ctx)
 
-    const html = await fixture.readHtmlFile('./line-breaks/input.html')
+    const html = await fixture.readHtmlFile('./allowed-blocks/input.html')
 
     const hastTree = await unified()
       .use(rehypeParse, { fragment: true })

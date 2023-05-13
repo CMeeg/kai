@@ -3,33 +3,33 @@
   "children": [
     {
       "type": "heading",
-      "level": 1,
-      "children": [{ "type": "text", "value": "Heading 1" }]
+      "children": [{ "type": "text", "value": "Heading 1" }],
+      "level": 1
     },
     {
       "type": "heading",
-      "level": 2,
-      "children": [{ "type": "text", "value": "Heading 2" }]
+      "children": [{ "type": "text", "value": "Heading 2" }],
+      "level": 2
     },
     {
       "type": "heading",
-      "level": 3,
-      "children": [{ "type": "text", "value": "Heading 3" }]
+      "children": [{ "type": "text", "value": "Heading 3" }],
+      "level": 3
     },
     {
       "type": "heading",
-      "level": 4,
-      "children": [{ "type": "text", "value": "Heading 4" }]
+      "children": [{ "type": "text", "value": "Heading 4" }],
+      "level": 4
     },
     {
       "type": "heading",
-      "level": 5,
-      "children": [{ "type": "text", "value": "Heading 5" }]
+      "children": [{ "type": "text", "value": "Heading 5" }],
+      "level": 5
     },
     {
       "type": "heading",
-      "level": 6,
-      "children": [{ "type": "text", "value": "Heading 6" }]
+      "children": [{ "type": "text", "value": "Heading 6" }],
+      "level": 6
     },
     {
       "type": "paragraph",
@@ -66,6 +66,41 @@
     {
       "type": "table",
       "children": [
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "span",
+                  "children": [{ "type": "text", "value": "Header 1" }],
+                  "marks": ["strong"]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "span",
+                  "children": [{ "type": "text", "value": "Header 2" }],
+                  "marks": ["strong"]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "span",
+                  "children": [{ "type": "text", "value": "Header 3" }],
+                  "marks": ["strong"]
+                }
+              ]
+            }
+          ]
+        },
         {
           "type": "tableRow",
           "children": [
