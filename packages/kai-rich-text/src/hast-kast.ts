@@ -17,6 +17,7 @@ import type {
   KastTable,
   KastTableRow,
   KastTableCell,
+  KastAsset,
   KastSpan,
   KastMarkType,
   KastText
@@ -184,6 +185,29 @@ const transformTableCellElement: ElementTransformer = (element) => {
   tableCell.type = kastNodeType.tableCell
 }
 
+const transformAssetElement: ElementTransformer = (element, index, parent) => {
+  if (!element.properties) {
+    return removeNode(index, parent)
+  }
+
+  const { src, dataAssetId, dataImageId, alt } = element.properties
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  //@ts-expect-error children is required of HastElement, but not KastAsset
+  delete element.children
+  delete element.properties
+
+  const asset = element as unknown as KastAsset
+  asset.type = kastNodeType.asset
+  asset.data = {
+    assetId: String(dataAssetId ?? ''),
+    imageId: String(dataImageId ?? ''),
+    url: String(src ?? ''),
+    description: String(alt ?? '')
+  }
+}
+
 const tagMarkMap: Partial<Record<HtmlTagName, KastMarkType>> = {
   [htmlTagName.strong]: kastMarkType.strong,
   [htmlTagName.em]: kastMarkType.emphasis,
@@ -298,6 +322,8 @@ const elementTransformer: Partial<
   [htmlTagName.tbody]: replaceElementWithChildren,
   [htmlTagName.tr]: transformTableRowElement,
   [htmlTagName.td]: transformTableCellElement,
+  [htmlTagName.figure]: replaceElementWithChildren,
+  [htmlTagName.img]: transformAssetElement,
   [htmlTagName.strong]: transformSpanElement,
   [htmlTagName.em]: transformSpanElement,
   [htmlTagName.sup]: transformSpanElement,
@@ -367,6 +393,11 @@ function isEmpty(root: KastRoot) {
 
   if (root.children.length > 1) {
     // More than one child so not empty
+    return false
+  }
+
+  if (typeof root.children[0].children === 'undefined') {
+    // Only child is not a parent so not empty
     return false
   }
 

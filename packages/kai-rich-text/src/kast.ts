@@ -1,26 +1,29 @@
-import type { Parent as UnistParent, Literal as UnistLiteral } from 'unist'
+import type {
+  Parent as UnistParent,
+  Literal as UnistLiteral,
+  Node as UnistNode
+} from 'unist'
 
 /*
 https://kontent.ai/learn/reference/openapi/delivery-api/#section/HTML5-elements-allowed-in-rich-text
 
-* Root
-* Blocks
-  * Heading
-  * Paragraph
-  * List, ListItem
-  * Table, TableBody, TableRow, TableCell
-* Spans
-  * Strong (Span with Marks?)
-  * Emphasis (Span with Marks?)
-  * Superscript (Span with Marks?)
-  * Subscript (Span with Marks?)
-  * Code
-  * LineBreak (\n in Text?)
-* Text
-* Asset
-* Link
-* ContentItem
-* Component
+* [x] Root
+* [x] Blocks
+  * [x] Heading
+  * [x] Paragraph
+  * [x] List, ListItem
+  * [x] Table, TableBody, TableRow, TableCell
+* [x] Spans
+  * [x] Strong (Span with Marks?)
+  * [x] Emphasis (Span with Marks?)
+  * [x] Superscript (Span with Marks?)
+  * [x] Subscript (Span with Marks?)
+  * [x] Code
+  * [x] LineBreak (\n in Text?)
+* [x] Text
+* [x] Asset
+* [ ] Link
+* [ ] ContentItem, Component
 */
 
 const kastNodeType = {
@@ -32,6 +35,7 @@ const kastNodeType = {
   table: 'table',
   tableRow: 'tableRow',
   tableCell: 'tableCell',
+  asset: 'asset',
   span: 'span',
   text: 'text'
 } as const
@@ -51,6 +55,7 @@ type KastContent =
   | KastTable
   | KastTableRow
   | KastTableCell
+  | KastAsset
   | KastSpan
 
 interface KastRoot extends KastParent {
@@ -174,6 +179,17 @@ interface KastTableCellContentMap {
   text: KastText
 }
 
+interface KastAsset extends UnistNode<KastAssetData> {
+  type: typeof kastNodeType.asset
+}
+
+type KastAssetData = {
+  assetId: string
+  imageId: string
+  url: string
+  description: string
+}
+
 const kastMarkType = {
   strong: 'strong',
   emphasis: 'emphasis',
@@ -235,6 +251,8 @@ export type {
   KastTableCell,
   KastTableCellContent,
   KastTableCellContentMap,
+  KastAsset,
+  KastAssetData,
   KastSpan,
   KastSpanContent,
   KastSpanContentMap,
