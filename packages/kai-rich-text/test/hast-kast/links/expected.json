@@ -1,0 +1,76 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "paragraph",
+      "children": [
+        { "type": "text", "value": "Paragraph with " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "external link" }],
+          "data": {
+            "type": "external",
+            "url": "https://meeg.dev/",
+            "title": "Meeg's blog",
+            "openInNewWindow": false
+          }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [
+            { "type": "text", "value": "external link in new window" }
+          ],
+          "data": {
+            "type": "external",
+            "url": "https://kontent.ai/",
+            "title": "Title",
+            "openInNewWindow": true
+          }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "internal link" }],
+          "data": {
+            "type": "internal",
+            "itemId": "c0b815d3-93b8-430a-b13f-1a713783a3d4"
+          }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "email link" }],
+          "data": { "type": "email", "email": "test@test.com", "subject": "" }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "email link with subject" }],
+          "data": {
+            "type": "email",
+            "email": "test@example.com",
+            "subject": "Test test test"
+          }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "asset link" }],
+          "data": {
+            "type": "asset",
+            "assetId": "1b768f88-1f8a-4844-aaff-608a5798a2c7",
+            "url": "https://preview-assets-us-01.kc-usercontent.com:443/28b1aee4-241f-0006-7f9c-8225c0db3f8a/2e7f8542-5f95-42d2-b958-8bc495bf7567/Firewatch_617304.jpg"
+          }
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "link",
+          "children": [{ "type": "text", "value": "phone number link" }],
+          "data": { "type": "phone", "phone": "01993 123456" }
+        },
+        { "type": "text", "value": "." }
+      ]
+    }
+  ]
+}

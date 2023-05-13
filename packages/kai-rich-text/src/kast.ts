@@ -37,6 +37,7 @@ const kastNodeType = {
   tableCell: 'tableCell',
   asset: 'asset',
   span: 'span',
+  link: 'link',
   text: 'text'
 } as const
 
@@ -212,6 +213,54 @@ interface KastSpanContentMap {
   text: KastText
 }
 
+const kastLinkType = {
+  internal: 'internal',
+  external: 'external',
+  email: 'email',
+  phone: 'phone',
+  asset: 'asset'
+} as const
+
+type KastLinkType = keyof typeof kastLinkType
+
+interface KastLink extends KastParent {
+  type: typeof kastNodeType.link
+  children: KastLinkContent[]
+  data: KastLinkData
+}
+
+type KastLinkContent = KastLinkContentMap[keyof KastLinkContentMap]
+
+interface KastLinkContentMap {
+  text: KastText
+}
+
+type KastLinkData =
+  | {
+      type: typeof kastLinkType.internal
+      itemId: string
+    }
+  | {
+      type: typeof kastLinkType.external
+      url: string
+      title: string
+      openInNewWindow: boolean
+    }
+  | {
+      type: typeof kastLinkType.email
+      email: string
+      subject: string
+    }
+  | {
+      type: typeof kastLinkType.phone
+      phone: string
+    }
+  | {
+      type: typeof kastLinkType.asset
+      assetId: string
+      url: string
+    }
+
 interface KastText extends KastLiteral {
   type: typeof kastNodeType.text
 }
@@ -220,7 +269,7 @@ interface KastLiteral extends UnistLiteral {
   value: string
 }
 
-export { kastNodeType, kastListType, kastMarkType }
+export { kastNodeType, kastListType, kastMarkType, kastLinkType }
 
 export type {
   KastNodeType,
@@ -257,6 +306,11 @@ export type {
   KastSpanContent,
   KastSpanContentMap,
   KastMarkType,
+  KastLinkType,
+  KastLink,
+  KastLinkContent,
+  KastLinkContentMap,
+  KastLinkData,
   KastText,
   KastLiteral
 }

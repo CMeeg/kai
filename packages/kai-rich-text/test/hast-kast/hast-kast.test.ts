@@ -9,7 +9,7 @@ describe('hastToKast', () => {
   test('sandbox', async (ctx) => {
     const fixture = createFixture(ctx)
 
-    const html = await fixture.readHtmlFile('./assets/input.html')
+    const html = await fixture.readHtmlFile('./links/input.html')
 
     const hastTree = await unified()
       .use(rehypeParse, { fragment: true })
@@ -143,6 +143,25 @@ describe('hastToKast', () => {
     const expected = await fixture.readJsonFile(
       './compound-marks/expected.json'
     )
+
+    expect(actual).toStrictEqual(expected)
+  })
+
+  test('should transform link elements', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./links/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile('./links/expected.json')
 
     expect(actual).toStrictEqual(expected)
   })

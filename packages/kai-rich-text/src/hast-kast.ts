@@ -1,11 +1,12 @@
 import type {
   Root as HastRoot,
   Element as HastElement,
-  Text as HastText
+  Text as HastText,
+  Properties as HastProperties
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import { kastNodeType, kastListType, kastMarkType } from '~/kast'
+import { kastNodeType, kastListType, kastMarkType, kastLinkType } from '~/kast'
 import type {
   KastParent,
   KastContent,
@@ -20,6 +21,8 @@ import type {
   KastAsset,
   KastSpan,
   KastMarkType,
+  KastLink,
+  KastLinkData,
   KastText
 } from '~/kast'
 
@@ -252,6 +255,79 @@ const transformSpanElement: ElementTransformer = (element, index, parent) => {
   span.marks = markType ? [markType] : []
 }
 
+function createLinkData(
+  properties: HastProperties | undefined
+): KastLinkData | undefined {
+  if (!properties) {
+    return undefined
+  }
+
+  const {
+    dataItemId,
+    href,
+    dataNewWindow,
+    title,
+    dataEmailAddress,
+    dataEmailSubject,
+    dataPhoneNumber,
+    dataAssetId
+  } = properties
+
+  if (dataItemId) {
+    return {
+      type: kastLinkType.internal,
+      itemId: String(dataItemId ?? '')
+    }
+  }
+
+  if (dataAssetId) {
+    return {
+      type: kastLinkType.asset,
+      assetId: String(dataAssetId ?? ''),
+      url: String(href ?? '')
+    }
+  }
+
+  if (dataEmailAddress) {
+    return {
+      type: kastLinkType.email,
+      email: String(dataEmailAddress ?? ''),
+      subject: String(dataEmailSubject ?? '')
+    }
+  }
+
+  if (dataPhoneNumber) {
+    return {
+      type: kastLinkType.phone,
+      phone: String(dataPhoneNumber ?? '')
+    }
+  }
+
+  // If none of the above matched then it must be an external link
+  return {
+    type: kastLinkType.external,
+    url: String(href ?? ''),
+    title: String(title ?? ''),
+    openInNewWindow: String(dataNewWindow ?? 'false') === 'true'
+  }
+}
+
+const transformLinkElement: ElementTransformer = (element, index, parent) => {
+  const linkData = createLinkData(element.properties)
+
+  if (!linkData) {
+    return removeNode(index, parent)
+  }
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const link = element as unknown as KastLink
+  link.type = kastNodeType.link
+  link.data = linkData
+}
+
 function getPreviousSibling(
   index?: number | null,
   parent?: HastRoot | HastElement | null
@@ -329,6 +405,7 @@ const elementTransformer: Partial<
   [htmlTagName.sup]: transformSpanElement,
   [htmlTagName.sub]: transformSpanElement,
   [htmlTagName.code]: transformSpanElement,
+  [htmlTagName.a]: transformLinkElement,
   [htmlTagName.br]: transformLineBreak
 }
 
