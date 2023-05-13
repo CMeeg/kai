@@ -6,7 +6,13 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import { kastNodeType, kastListType, kastMarkType, kastLinkType } from '~/kast'
+import {
+  kastNodeType,
+  kastListType,
+  kastComponentType,
+  kastMarkType,
+  kastLinkType
+} from '~/kast'
 import type {
   KastParent,
   KastContent,
@@ -19,6 +25,7 @@ import type {
   KastTableRow,
   KastTableCell,
   KastAsset,
+  KastComponent,
   KastSpan,
   KastMarkType,
   KastLink,
@@ -211,6 +218,34 @@ const transformAssetElement: ElementTransformer = (element, index, parent) => {
   }
 }
 
+const transformComponentElement: ElementTransformer = (
+  element,
+  index,
+  parent
+) => {
+  if (!element.properties) {
+    return removeNode(index, parent)
+  }
+
+  const { dataRel, dataCodename } = element.properties
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  //@ts-expect-error children is required of HastElement, but not KastComponent
+  delete element.children
+  delete element.properties
+
+  const component = element as unknown as KastComponent
+  component.type = kastNodeType.component
+  component.data = {
+    type:
+      String(dataRel ?? '') === 'link'
+        ? kastComponentType.item
+        : kastComponentType.component,
+    codename: String(dataCodename ?? '')
+  }
+}
+
 const tagMarkMap: Partial<Record<HtmlTagName, KastMarkType>> = {
   [htmlTagName.strong]: kastMarkType.strong,
   [htmlTagName.em]: kastMarkType.emphasis,
@@ -400,6 +435,7 @@ const elementTransformer: Partial<
   [htmlTagName.td]: transformTableCellElement,
   [htmlTagName.figure]: replaceElementWithChildren,
   [htmlTagName.img]: transformAssetElement,
+  [htmlTagName.object]: transformComponentElement,
   [htmlTagName.strong]: transformSpanElement,
   [htmlTagName.em]: transformSpanElement,
   [htmlTagName.sup]: transformSpanElement,
@@ -441,8 +477,6 @@ function transformTextNode(
   index: number | null,
   parent: HastRoot | HastElement | null
 ): VisitorResult {
-  // TODO: If previous sibling is also a text node then concatenate them together
-
   const sibling = getPreviousSibling(index, parent)
 
   if (sibling?.type !== kastNodeType.text) {
@@ -473,8 +507,11 @@ function isEmpty(root: KastRoot) {
     return false
   }
 
-  if (typeof root.children[0].children === 'undefined') {
-    // Only child is not a parent so not empty
+  if (
+    root.children[0].type === kastNodeType.asset ||
+    root.children[0].type === kastNodeType.component
+  ) {
+    // Assets and components do not have children so not empty
     return false
   }
 

@@ -5,25 +5,8 @@ import type {
 } from 'unist'
 
 /*
+See for reference:
 https://kontent.ai/learn/reference/openapi/delivery-api/#section/HTML5-elements-allowed-in-rich-text
-
-* [x] Root
-* [x] Blocks
-  * [x] Heading
-  * [x] Paragraph
-  * [x] List, ListItem
-  * [x] Table, TableBody, TableRow, TableCell
-* [x] Spans
-  * [x] Strong (Span with Marks?)
-  * [x] Emphasis (Span with Marks?)
-  * [x] Superscript (Span with Marks?)
-  * [x] Subscript (Span with Marks?)
-  * [x] Code
-  * [x] LineBreak (\n in Text?)
-* [x] Text
-* [x] Asset
-* [ ] Link
-* [ ] ContentItem, Component
 */
 
 const kastNodeType = {
@@ -36,6 +19,7 @@ const kastNodeType = {
   tableRow: 'tableRow',
   tableCell: 'tableCell',
   asset: 'asset',
+  component: 'component',
   span: 'span',
   link: 'link',
   text: 'text'
@@ -56,8 +40,8 @@ type KastContent =
   | KastTable
   | KastTableRow
   | KastTableCell
-  | KastAsset
   | KastSpan
+  | KastLink
 
 interface KastRoot extends KastParent {
   type: typeof kastNodeType.root
@@ -71,6 +55,8 @@ interface KastRootContentMap {
   paragraph: KastParagraph
   list: KastList
   table: KastTable
+  asset: KastAsset
+  component: KastComponent
 }
 
 interface KastHeading extends KastParent {
@@ -98,6 +84,7 @@ type KastHeadingContent = KastHeadingContentMap[keyof KastHeadingContentMap]
  */
 interface KastHeadingContentMap {
   span: KastSpan
+  link: KastLink
   text: KastText
 }
 
@@ -111,6 +98,7 @@ type KastParagraphContent =
 
 interface KastParagraphContentMap {
   span: KastSpan
+  link: KastLink
   text: KastText
 }
 
@@ -142,6 +130,7 @@ type KastListItemContent = KastListItemContentMap[keyof KastListItemContentMap]
 
 interface KastListItemContentMap {
   span: KastSpan
+  link: KastLink
   text: KastText
 }
 
@@ -177,6 +166,7 @@ type KastTableCellContent =
 
 interface KastTableCellContentMap {
   span: KastSpan
+  link: KastLink
   text: KastText
 }
 
@@ -189,6 +179,22 @@ type KastAssetData = {
   imageId: string
   url: string
   description: string
+}
+
+const kastComponentType = {
+  component: 'component',
+  item: 'item'
+} as const
+
+type KastComponentType = keyof typeof kastComponentType
+
+interface KastComponent extends UnistNode<KastComponentData> {
+  type: typeof kastNodeType.component
+}
+
+type KastComponentData = {
+  type: KastComponentType
+  codename: string
 }
 
 const kastMarkType = {
@@ -210,6 +216,7 @@ interface KastSpan extends KastParent {
 type KastSpanContent = KastSpanContentMap[keyof KastSpanContentMap]
 
 interface KastSpanContentMap {
+  link: KastLink
   text: KastText
 }
 
@@ -232,6 +239,7 @@ interface KastLink extends KastParent {
 type KastLinkContent = KastLinkContentMap[keyof KastLinkContentMap]
 
 interface KastLinkContentMap {
+  span: KastSpan
   text: KastText
 }
 
@@ -269,7 +277,13 @@ interface KastLiteral extends UnistLiteral {
   value: string
 }
 
-export { kastNodeType, kastListType, kastMarkType, kastLinkType }
+export {
+  kastNodeType,
+  kastListType,
+  kastComponentType,
+  kastMarkType,
+  kastLinkType
+}
 
 export type {
   KastNodeType,
@@ -302,6 +316,9 @@ export type {
   KastTableCellContentMap,
   KastAsset,
   KastAssetData,
+  KastComponentType,
+  KastComponent,
+  KastComponentData,
   KastSpan,
   KastSpanContent,
   KastSpanContentMap,

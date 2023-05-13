@@ -21,7 +21,12 @@ function createRichTextKastResolver(): RichTextKastResolver {
         .use(rehypeParse, { fragment: true })
         .parse(element.value)
 
-      // TODO: Create another transformer plugin that will add more data after hastToKast such as width and height from images (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Images-in-rich-text)
+      /*
+      TODO: Create another transformer plugin that will add more data after hastToKast such as:
+      * width and height from images (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Images-in-rich-text)
+      * url for internal links (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Links-in-rich-text)
+      * component or item data for components (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Content-items-and-components-in-rich-text)
+      */
 
       return await unified()
         .use(rehypeMinifyWhitespace)

@@ -1,0 +1,16 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "component",
+      "data": { "type": "item", "codename": "all_elements___some_empty" }
+    },
+    {
+      "type": "component",
+      "data": {
+        "type": "component",
+        "codename": "aee7a02e_a54e_0184_87be_f705fc315377"
+      }
+    }
+  ]
+}

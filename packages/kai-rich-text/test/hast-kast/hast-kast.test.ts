@@ -6,10 +6,10 @@ import { hastToKast } from '~/hast-kast'
 import { createFixture } from '../fixture'
 
 describe('hastToKast', () => {
-  test('sandbox', async (ctx) => {
+  test.skip('sandbox', async (ctx) => {
     const fixture = createFixture(ctx)
 
-    const html = await fixture.readHtmlFile('./links/input.html')
+    const html = await fixture.readHtmlFile('./components/input.html')
 
     const hastTree = await unified()
       .use(rehypeParse, { fragment: true })
@@ -103,6 +103,25 @@ describe('hastToKast', () => {
       .run(hastTree)
 
     const expected = await fixture.readJsonFile('./assets/expected.json')
+
+    expect(actual).toStrictEqual(expected)
+  })
+
+  test('should transform component elements', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./components/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile('./components/expected.json')
 
     expect(actual).toStrictEqual(expected)
   })
