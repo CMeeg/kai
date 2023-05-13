@@ -1,0 +1,27 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "paragraph",
+      "children": [
+        { "type": "text", "value": "This is text with a line\nbreak and " },
+        {
+          "type": "span",
+          "children": [
+            { "type": "text", "value": "multiple line\n\n\n\nbreaks." }
+          ],
+          "marks": ["emphasis"]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "\nThis text has a line break at the start and end.\n"
+        }
+      ]
+    }
+  ]
+}

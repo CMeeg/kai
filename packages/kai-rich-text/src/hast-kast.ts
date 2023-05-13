@@ -8,6 +8,7 @@ import type { VisitorResult } from 'unist-util-visit'
 import { kastNodeType, kastListType, kastMarkType } from '~/kast'
 import type {
   KastParent,
+  KastContent,
   KastRoot,
   KastHeading,
   KastParagraph,
@@ -17,7 +18,8 @@ import type {
   KastTableRow,
   KastTableCell,
   KastSpan,
-  KastMarkType
+  KastMarkType,
+  KastText
 } from '~/kast'
 
 const htmlTagName = {
@@ -61,6 +63,7 @@ const hastNodeType = {
   text: 'text'
 } as const
 
+// See https://unifiedjs.com/learn/recipe/remove-node/
 function replaceElementWithChildren(
   element: HastElement,
   index?: number | null,
@@ -79,11 +82,17 @@ function replaceElementWithChildren(
   }
 }
 
+// See https://unifiedjs.com/learn/recipe/remove-node/
 function removeNode(
-  index: number | null,
-  parent: HastRoot | HastElement | null
+  index?: number | null,
+  parent?: HastRoot | HastElement | null
 ): VisitorResult {
-  if (index !== null && parent != null) {
+  if (
+    typeof index !== 'undefined' &&
+    index !== null &&
+    typeof parent !== 'undefined' &&
+    parent !== null
+  ) {
     parent.children.splice(index, 1)
 
     // Do not traverse `node`, continue at the node *now* at `index`.
@@ -219,6 +228,52 @@ const transformSpanElement: ElementTransformer = (element, index, parent) => {
   span.marks = markType ? [markType] : []
 }
 
+function getPreviousSibling(
+  index?: number | null,
+  parent?: HastRoot | HastElement | null
+): KastContent | null {
+  if (
+    typeof index !== 'undefined' &&
+    index !== null &&
+    index > 0 &&
+    (parent?.children.length ?? 0) > 0
+  ) {
+    const sibling = parent?.children[index - 1]
+
+    return sibling as unknown as KastContent
+  }
+
+  return null
+}
+
+const lineBreakValue = '\n'
+
+const transformLineBreak: ElementTransformer = (element, index, parent) => {
+  //@ts-expect-error tagName is required of HastElement, but not KastText
+  delete element.tagName
+  //@ts-expect-error children is required of HastElement, but not KastText
+  delete element.children
+  delete element.properties
+
+  const sibling = getPreviousSibling(index, parent)
+
+  if (sibling?.type !== kastNodeType.text) {
+    // The previous sibling is not of type text so transform to a text node
+
+    const text = element as unknown as KastText
+    text.type = kastNodeType.text
+    text.value = lineBreakValue
+
+    return
+  }
+
+  // The previous sibling is of type text so append the line break and skip this node
+
+  sibling.value += lineBreakValue
+
+  return removeNode(index, parent)
+}
+
 const elementTransformer: Partial<
   Record<
     HtmlTagName,
@@ -247,7 +302,8 @@ const elementTransformer: Partial<
   [htmlTagName.em]: transformSpanElement,
   [htmlTagName.sup]: transformSpanElement,
   [htmlTagName.sub]: transformSpanElement,
-  [htmlTagName.code]: transformSpanElement
+  [htmlTagName.code]: transformSpanElement,
+  [htmlTagName.br]: transformLineBreak
 }
 
 function transformElementNode(
@@ -256,25 +312,51 @@ function transformElementNode(
   parent: HastRoot | HastElement | null
 ): VisitorResult {
   if (!isAllowedHtmlTag(element.tagName)) {
-    // This element is not allowed in Kontent Rich text fields so we will replace it with its children - see https://unifiedjs.com/learn/recipe/remove-node/
+    // This element is not allowed in Kontent Rich text fields so we will replace it with its children
 
     return replaceElementWithChildren(element, index, parent)
   }
 
-  // We don't need position
-  delete element.position
-
   // Transform based on the element's tagName
   const transformer = elementTransformer[element.tagName]
-  if (transformer) {
-    return transformer(element, index, parent)
+
+  if (!transformer) {
+    // We don't know how to transform this tag so we will remove it
+
+    return replaceElementWithChildren(element, index, parent)
   }
+
+  // We don't need position on any element node
+  delete element.position
+
+  // Run the transformer
+  return transformer(element, index, parent)
 }
 
-function transformTextNode(text: HastText): VisitorResult {
-  // We don't need position or data
-  delete text.position
-  delete text.data
+function transformTextNode(
+  text: HastText,
+  index: number | null,
+  parent: HastRoot | HastElement | null
+): VisitorResult {
+  // TODO: If previous sibling is also a text node then concatenate them together
+
+  const sibling = getPreviousSibling(index, parent)
+
+  if (sibling?.type !== kastNodeType.text) {
+    // The previous sibling is not of type text so transform to a text node
+
+    // We don't need position or data
+    delete text.position
+    delete text.data
+
+    return
+  }
+
+  // The previous sibling is of type text so append the line break and skip this node
+
+  sibling.value += text.value
+
+  return removeNode(index, parent)
 }
 
 function hastToKast() {
@@ -289,7 +371,7 @@ function hastToKast() {
       }
 
       if (node.type === hastNodeType.text) {
-        return transformTextNode(node)
+        return transformTextNode(node, index, parent)
       }
 
       // If it's not a root, element or text node then we don't need it

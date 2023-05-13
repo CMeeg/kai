@@ -9,7 +9,7 @@ describe('hastToKast', () => {
   test('sandbox', async (ctx) => {
     const fixture = createFixture(ctx)
 
-    const html = await fixture.readHtmlFile('./compound-marks/input.html')
+    const html = await fixture.readHtmlFile('./line-breaks/input.html')
 
     const hastTree = await unified()
       .use(rehypeParse, { fragment: true })
@@ -124,6 +124,25 @@ describe('hastToKast', () => {
     const expected = await fixture.readJsonFile(
       './compound-marks/expected.json'
     )
+
+    expect(actual).toStrictEqual(expected)
+  })
+
+  test('should compound line break elements with text nodes', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./line-breaks/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile('./line-breaks/expected.json')
 
     expect(actual).toStrictEqual(expected)
   })
