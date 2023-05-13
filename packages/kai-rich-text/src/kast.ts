@@ -32,6 +32,7 @@ const kastNodeType = {
   table: 'table',
   tableRow: 'tableRow',
   tableCell: 'tableCell',
+  span: 'span',
   text: 'text'
 } as const
 
@@ -50,6 +51,7 @@ type KastContent =
   | KastTable
   | KastTableRow
   | KastTableCell
+  | KastSpan
 
 interface KastRoot extends KastParent {
   type: typeof kastNodeType.root
@@ -89,6 +91,7 @@ type KastHeadingContent = KastHeadingContentMap[keyof KastHeadingContentMap]
  * }
  */
 interface KastHeadingContentMap {
+  span: KastSpan
   text: KastText
 }
 
@@ -101,6 +104,7 @@ type KastParagraphContent =
   KastParagraphContentMap[keyof KastParagraphContentMap]
 
 interface KastParagraphContentMap {
+  span: KastSpan
   text: KastText
 }
 
@@ -131,6 +135,7 @@ interface KastListItem extends KastParent {
 type KastListItemContent = KastListItemContentMap[keyof KastListItemContentMap]
 
 interface KastListItemContentMap {
+  span: KastSpan
   text: KastText
 }
 
@@ -165,6 +170,29 @@ type KastTableCellContent =
   KastTableCellContentMap[keyof KastTableCellContentMap]
 
 interface KastTableCellContentMap {
+  span: KastSpan
+  text: KastText
+}
+
+const kastMarkType = {
+  strong: 'strong',
+  emphasis: 'emphasis',
+  superscript: 'superscript',
+  subscript: 'subscript',
+  code: 'code'
+} as const
+
+type KastMarkType = keyof typeof kastMarkType
+
+interface KastSpan extends KastParent {
+  type: typeof kastNodeType.span
+  children: KastSpanContent[]
+  marks: KastMarkType[]
+}
+
+type KastSpanContent = KastSpanContentMap[keyof KastSpanContentMap]
+
+interface KastSpanContentMap {
   text: KastText
 }
 
@@ -176,7 +204,7 @@ interface KastLiteral extends UnistLiteral {
   value: string
 }
 
-export { kastNodeType, kastListType }
+export { kastNodeType, kastListType, kastMarkType }
 
 export type {
   KastNodeType,
@@ -207,6 +235,10 @@ export type {
   KastTableCell,
   KastTableCellContent,
   KastTableCellContentMap,
+  KastSpan,
+  KastSpanContent,
+  KastSpanContentMap,
+  KastMarkType,
   KastText,
   KastLiteral
 }

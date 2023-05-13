@@ -9,7 +9,7 @@ describe('hastToKast', () => {
   test('sandbox', async (ctx) => {
     const fixture = createFixture(ctx)
 
-    const html = await fixture.readHtmlFile('./allowed-blocks/input.html')
+    const html = await fixture.readHtmlFile('./compound-marks/input.html')
 
     const hastTree = await unified()
       .use(rehypeParse, { fragment: true })
@@ -83,6 +83,46 @@ describe('hastToKast', () => {
 
     const expected = await fixture.readJsonFile(
       './allowed-blocks/expected.json'
+    )
+
+    expect(actual).toStrictEqual(expected)
+  })
+
+  test('should transform allowed span level html elements', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./allowed-marks/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile('./allowed-marks/expected.json')
+
+    expect(actual).toStrictEqual(expected)
+  })
+
+  test('should compound span level html elements when direct descendents', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./compound-marks/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile(
+      './compound-marks/expected.json'
     )
 
     expect(actual).toStrictEqual(expected)

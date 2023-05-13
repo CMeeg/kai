@@ -1,0 +1,40 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "paragraph",
+      "children": [
+        { "type": "text", "value": "Paragraph with " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "bold" }],
+          "marks": ["strong"]
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "italic" }],
+          "marks": ["emphasis"]
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "superscript" }],
+          "marks": ["superscript"]
+        },
+        { "type": "text", "value": ", " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "subscript" }],
+          "marks": ["subscript"]
+        },
+        { "type": "text", "value": " and " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "code" }],
+          "marks": ["code"]
+        }
+      ]
+    }
+  ]
+}

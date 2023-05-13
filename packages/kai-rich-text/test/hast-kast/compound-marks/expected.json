@@ -1,0 +1,38 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "paragraph",
+      "children": [
+        { "type": "text", "value": "This is some " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "bold and italic " }],
+          "marks": ["emphasis", "strong"]
+        },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "superscript" }],
+          "marks": ["emphasis", "strong", "superscript"]
+        },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": " and " }],
+          "marks": ["strong"]
+        },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "subscript" }],
+          "marks": ["strong", "subscript"]
+        },
+        { "type": "text", "value": " text, and some " },
+        {
+          "type": "span",
+          "children": [{ "type": "text", "value": "code" }],
+          "marks": ["code"]
+        },
+        { "type": "text", "value": "." }
+      ]
+    }
+  ]
+}

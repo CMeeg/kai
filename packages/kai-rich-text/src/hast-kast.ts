@@ -5,8 +5,9 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import { kastNodeType, kastListType } from '~/kast'
+import { kastNodeType, kastListType, kastMarkType } from '~/kast'
 import type {
+  KastParent,
   KastRoot,
   KastHeading,
   KastParagraph,
@@ -14,7 +15,9 @@ import type {
   KastListItem,
   KastTable,
   KastTableRow,
-  KastTableCell
+  KastTableCell,
+  KastSpan,
+  KastMarkType
 } from '~/kast'
 
 const htmlTagName = {
@@ -172,6 +175,50 @@ const transformTableCellElement: ElementTransformer = (element) => {
   tableCell.type = kastNodeType.tableCell
 }
 
+const tagMarkMap: Partial<Record<HtmlTagName, KastMarkType>> = {
+  [htmlTagName.strong]: kastMarkType.strong,
+  [htmlTagName.em]: kastMarkType.emphasis,
+  [htmlTagName.sup]: kastMarkType.superscript,
+  [htmlTagName.sub]: kastMarkType.subscript,
+  [htmlTagName.code]: kastMarkType.code
+}
+
+function getMarkType(tagName: string): KastMarkType | null {
+  if (!isAllowedHtmlTag(tagName)) {
+    return null
+  }
+
+  return tagMarkMap[tagName] ?? null
+}
+
+const transformSpanElement: ElementTransformer = (element, index, parent) => {
+  const { tagName } = element
+  const markType = getMarkType(tagName)
+
+  const kastParent = parent as unknown as KastParent
+
+  if (kastParent?.type === kastNodeType.span) {
+    // If the parent is also a span then we can just add this element as an additional mark and then move on to processing its children
+
+    if (markType) {
+      const kastSpan = kastParent as KastSpan
+      kastSpan.marks.push(markType)
+    }
+
+    return replaceElementWithChildren(element, index, parent)
+  }
+
+  // Transform this element to a span
+
+  //@ts-expect-error tagName is required of HastElement, but not KastElement
+  delete element.tagName
+  delete element.properties
+
+  const span = element as unknown as KastSpan
+  span.type = kastNodeType.span
+  span.marks = markType ? [markType] : []
+}
+
 const elementTransformer: Partial<
   Record<
     HtmlTagName,
@@ -195,7 +242,12 @@ const elementTransformer: Partial<
   [htmlTagName.table]: transformTableElement,
   [htmlTagName.tbody]: replaceElementWithChildren,
   [htmlTagName.tr]: transformTableRowElement,
-  [htmlTagName.td]: transformTableCellElement
+  [htmlTagName.td]: transformTableCellElement,
+  [htmlTagName.strong]: transformSpanElement,
+  [htmlTagName.em]: transformSpanElement,
+  [htmlTagName.sup]: transformSpanElement,
+  [htmlTagName.sub]: transformSpanElement,
+  [htmlTagName.code]: transformSpanElement
 }
 
 function transformElementNode(
@@ -226,8 +278,6 @@ function transformTextNode(text: HastText): VisitorResult {
 }
 
 function hastToKast() {
-  // TODO: Validate nodes are valid (or remove those that aren't)
-
   return (tree: HastRoot) => {
     visit(tree, (node, index, parent) => {
       if (node.type === hastNodeType.root) {
