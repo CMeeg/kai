@@ -146,4 +146,23 @@ describe('hastToKast', () => {
 
     expect(actual).toStrictEqual(expected)
   })
+
+  test('should return root with no children when provided empty Kontent rich text value', async (ctx) => {
+    const fixture = createFixture(ctx)
+
+    const html = await fixture.readHtmlFile('./empty-value/input.html')
+
+    const hastTree = await unified()
+      .use(rehypeParse, { fragment: true })
+      .parse(html)
+
+    const actual = await unified()
+      .use(rehypeMinifyWhitespace)
+      .use(hastToKast)
+      .run(hastTree)
+
+    const expected = await fixture.readJsonFile('./empty-value/expected.json')
+
+    expect(actual).toStrictEqual(expected)
+  })
 })

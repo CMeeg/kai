@@ -359,6 +359,40 @@ function transformTextNode(
   return removeNode(index, parent)
 }
 
+function isEmpty(root: KastRoot) {
+  if (root.children.length === 0) {
+    // No children so is empty
+    return true
+  }
+
+  if (root.children.length > 1) {
+    // More than one child so not empty
+    return false
+  }
+
+  if (root.children[0].children.length === 0) {
+    // Only child has no children so is empty
+    return true
+  }
+
+  if (root.children[0].children.length > 1) {
+    // Only child has no more than one child so not empty
+    return false
+  }
+
+  if (
+    root.children[0].type === kastNodeType.paragraph &&
+    root.children[0].children[0].type === kastNodeType.text &&
+    root.children[0].children[0].value === lineBreakValue
+  ) {
+    // Onlly child is a paragraph containing a single line break so is empty
+    return true
+  }
+
+  // Otherwise not empty
+  return false
+}
+
 function hastToKast() {
   return (tree: HastRoot) => {
     visit(tree, (node, index, parent) => {
@@ -378,7 +412,14 @@ function hastToKast() {
       return removeNode(index, parent)
     })
 
-    return tree as unknown as KastRoot
+    const kast = tree as unknown as KastRoot
+
+    if (isEmpty(kast)) {
+      // If empty zero the children
+      kast.children.length = 0
+    }
+
+    return kast
   }
 }
 
