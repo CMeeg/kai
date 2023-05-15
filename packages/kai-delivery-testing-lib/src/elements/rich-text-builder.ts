@@ -261,4 +261,8 @@ function richTextElementBuilder(options?: RichTextElementBuilderOptions) {
 
 export { richTextElementBuilder }
 
-export type { RichTextElementBuilder, RichTextElementBuilderOptions }
+export type {
+  RichTextElementBuilder,
+  RichTextElementBuilderOptions,
+  RichTextElementBuilderImage
+}

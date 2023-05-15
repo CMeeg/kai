@@ -195,6 +195,7 @@ importers:
 
   packages/kai-rich-text:
     specifiers:
+      '@faker-js/faker': ^7.6.0
       '@kontent-ai/delivery-sdk': ^14.0.1
       '@meeg/kai-delivery-testing-lib': workspace:*
       '@types/hast': ^2.3.4
@@ -218,6 +219,7 @@ importers:
       unified: 10.1.2
       unist-util-visit: 4.1.2
     devDependencies:
+      '@faker-js/faker': 7.6.0
       '@types/hast': 2.3.4
       '@types/unist': 2.0.6
       eslint: 8.35.0
@@ -2013,7 +2015,6 @@ packages:
   /@faker-js/faker/7.6.0:
     resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
-    dev: false
 
   /@fal-works/esbuild-plugin-global-externals/2.1.2:
     resolution: {integrity: sha512-cEee/Z+I12mZcFJshKcCqC8tuX5hG3s+d+9nZ3LabqKF1vKdF41B92pJVCBggjAGORAeOzyyDDKrZwIkLffeOQ==}
@@ -2988,6 +2989,12 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
+  /@storybook/client-logger/7.0.12:
+    resolution: {integrity: sha512-MQMtIgGEgdixvxnBvZ2m8hhc0DGJWeCpHtxg7oqBLBEBmCYFueTqDZHl4Z6SoCrK0a2YS5X/BIXOcEtP1ulMKw==}
+    dependencies:
+      '@storybook/global': 5.0.0
+    dev: true
+
   /@storybook/codemod/7.0.0-rc.0:
     resolution: {integrity: sha512-Y3GkcNzPy0cXfrGdFFn6hYkmgb5XdbDoIG748oAmnhaIrGZ8+NB9F6PHn6+RHW93wregZ5P9PShFNW/PseliwA==}
     dependencies:
@@ -3551,7 +3558,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.11
+      '@storybook/client-logger': 7.0.12
       '@storybook/instrumenter': 7.0.11
       '@testing-library/dom': 8.20.0
       '@testing-library/user-event': 13.5.0_yxlyej73nftwmh2fiao7paxmlm

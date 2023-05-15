@@ -6,6 +6,7 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
+import type { Elements } from '@kontent-ai/delivery-sdk'
 import {
   kastNodeType,
   kastListType,
@@ -120,7 +121,8 @@ function transformRootNode(root: HastRoot): VisitorResult {
 type ElementTransformer = (
   element: HastElement,
   index?: number | null,
-  parent?: HastRoot | HastElement | null
+  parent?: HastRoot | HastElement | null,
+  richTextElement?: Elements.RichTextElement
 ) => VisitorResult
 
 const transformHeadingElement: ElementTransformer = (element) => {
@@ -195,7 +197,12 @@ const transformTableCellElement: ElementTransformer = (element) => {
   tableCell.type = kastNodeType.tableCell
 }
 
-const transformAssetElement: ElementTransformer = (element, index, parent) => {
+const transformAssetElement: ElementTransformer = (
+  element,
+  index,
+  parent,
+  richTextElement
+) => {
   if (!element.properties) {
     return removeNode(index, parent)
   }
@@ -215,6 +222,15 @@ const transformAssetElement: ElementTransformer = (element, index, parent) => {
     imageId: String(dataImageId ?? ''),
     url: String(src ?? ''),
     description: String(alt ?? '')
+  }
+
+  const image = richTextElement?.images.find(
+    (image) => image.imageId === asset.data?.imageId
+  )
+
+  if (image) {
+    asset.data.width = image.width
+    asset.data.height = image.height
   }
 }
 
@@ -409,16 +425,7 @@ const transformLineBreak: ElementTransformer = (element, index, parent) => {
   return removeNode(index, parent)
 }
 
-const elementTransformer: Partial<
-  Record<
-    HtmlTagName,
-    (
-      element: HastElement,
-      index?: number | null,
-      parent?: HastRoot | HastElement | null
-    ) => VisitorResult
-  >
-> = {
+const elementTransformer: Partial<Record<HtmlTagName, ElementTransformer>> = {
   [htmlTagName.h1]: transformHeadingElement,
   [htmlTagName.h2]: transformHeadingElement,
   [htmlTagName.h3]: transformHeadingElement,
@@ -448,7 +455,8 @@ const elementTransformer: Partial<
 function transformElementNode(
   element: HastElement,
   index: number | null,
-  parent: HastRoot | HastElement | null
+  parent: HastRoot | HastElement | null,
+  richTextElement?: Elements.RichTextElement
 ): VisitorResult {
   if (!isAllowedHtmlTag(element.tagName)) {
     // This element is not allowed in Kontent Rich text fields so we will replace it with its children
@@ -469,7 +477,7 @@ function transformElementNode(
   delete element.position
 
   // Run the transformer
-  return transformer(element, index, parent)
+  return transformer(element, index, parent, richTextElement)
 }
 
 function transformTextNode(
@@ -538,7 +546,11 @@ function isEmpty(root: KastRoot) {
   return false
 }
 
-function hastToKast() {
+interface HastToKastOptions {
+  element: Elements.RichTextElement
+}
+
+function hastToKast(options?: HastToKastOptions) {
   return (tree: HastRoot) => {
     visit(tree, (node, index, parent) => {
       if (node.type === hastNodeType.root) {
@@ -546,7 +558,7 @@ function hastToKast() {
       }
 
       if (node.type === hastNodeType.element) {
-        return transformElementNode(node, index, parent)
+        return transformElementNode(node, index, parent, options?.element)
       }
 
       if (node.type === hastNodeType.text) {

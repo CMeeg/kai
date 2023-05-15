@@ -179,6 +179,8 @@ type KastAssetData = {
   imageId: string
   url: string
   description: string
+  width?: number | null
+  height?: number | null
 }
 
 const kastComponentType = {

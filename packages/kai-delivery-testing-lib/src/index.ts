@@ -1,5 +1,6 @@
 export * from './content-item-builder'
 export * from './delivery-client-builder'
+export * from './elements'
 export * from './project'
 export * from './test-http-service-factory'
 export * from './url-factory'
