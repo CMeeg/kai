@@ -6,7 +6,7 @@ import type {
 } from 'hast'
 import { visit, SKIP } from 'unist-util-visit'
 import type { VisitorResult } from 'unist-util-visit'
-import type { Elements } from '@kontent-ai/delivery-sdk'
+import type { Elements, IContentItemsContainer } from '@kontent-ai/delivery-sdk'
 import {
   kastNodeType,
   kastListType,
@@ -31,6 +31,7 @@ import type {
   KastMarkType,
   KastLink,
   KastLinkData,
+  KastInternalUrlResolver,
   KastText
 } from '~/kast'
 
@@ -122,7 +123,7 @@ type ElementTransformer = (
   element: HastElement,
   index?: number | null,
   parent?: HastRoot | HastElement | null,
-  richTextElement?: Elements.RichTextElement
+  options?: HastToKastOptions
 ) => VisitorResult
 
 const transformHeadingElement: ElementTransformer = (element) => {
@@ -201,7 +202,7 @@ const transformAssetElement: ElementTransformer = (
   element,
   index,
   parent,
-  richTextElement
+  options
 ) => {
   if (!element.properties) {
     return removeNode(index, parent)
@@ -224,13 +225,13 @@ const transformAssetElement: ElementTransformer = (
     description: String(alt ?? '')
   }
 
-  const image = richTextElement?.images.find(
+  const richTextImage = options?.element?.images.find(
     (image) => image.imageId === asset.data?.imageId
   )
 
-  if (image) {
-    asset.data.width = image.width
-    asset.data.height = image.height
+  if (richTextImage) {
+    asset.data.width = richTextImage.width
+    asset.data.height = richTextImage.height
   }
 }
 
@@ -363,7 +364,30 @@ function createLinkData(
   }
 }
 
-const transformLinkElement: ElementTransformer = (element, index, parent) => {
+function getContentItemUrl(
+  itemCodename: string,
+  options?: HastToKastOptions
+): ReturnType<KastInternalUrlResolver> {
+  if (!itemCodename || !options?.linkedItems || !options?.urlResolver) {
+    return null
+  }
+
+  // Try to get the linkedItem using the codename
+  const contentItem = options.linkedItems[itemCodename]
+
+  if (!contentItem) {
+    return null
+  }
+
+  return options.urlResolver(contentItem)
+}
+
+const transformLinkElement: ElementTransformer = (
+  element,
+  index,
+  parent,
+  options
+) => {
   const linkData = createLinkData(element.properties)
 
   if (!linkData) {
@@ -377,6 +401,24 @@ const transformLinkElement: ElementTransformer = (element, index, parent) => {
   const link = element as unknown as KastLink
   link.type = kastNodeType.link
   link.data = linkData
+
+  if (linkData.type === kastLinkType.internal) {
+    const richTextLink = options?.element?.links.find(
+      (l) => l.linkId === linkData.itemId
+    )
+
+    if (richTextLink) {
+      linkData.itemCodename = richTextLink.codename
+      linkData.itemType = richTextLink.type
+      linkData.itemUrlSlug = richTextLink.urlSlug
+
+      const url = getContentItemUrl(linkData.itemCodename, options)
+
+      if (url) {
+        linkData.itemUrl = url
+      }
+    }
+  }
 }
 
 function getPreviousSibling(
@@ -456,7 +498,7 @@ function transformElementNode(
   element: HastElement,
   index: number | null,
   parent: HastRoot | HastElement | null,
-  richTextElement?: Elements.RichTextElement
+  options?: HastToKastOptions
 ): VisitorResult {
   if (!isAllowedHtmlTag(element.tagName)) {
     // This element is not allowed in Kontent Rich text fields so we will replace it with its children
@@ -477,7 +519,7 @@ function transformElementNode(
   delete element.position
 
   // Run the transformer
-  return transformer(element, index, parent, richTextElement)
+  return transformer(element, index, parent, options)
 }
 
 function transformTextNode(
@@ -547,7 +589,9 @@ function isEmpty(root: KastRoot) {
 }
 
 interface HastToKastOptions {
-  element: Elements.RichTextElement
+  element?: Elements.RichTextElement
+  linkedItems?: IContentItemsContainer
+  urlResolver?: KastInternalUrlResolver
 }
 
 function hastToKast(options?: HastToKastOptions) {
@@ -558,7 +602,7 @@ function hastToKast(options?: HastToKastOptions) {
       }
 
       if (node.type === hastNodeType.element) {
-        return transformElementNode(node, index, parent, options?.element)
+        return transformElementNode(node, index, parent, options)
       }
 
       if (node.type === hastNodeType.text) {

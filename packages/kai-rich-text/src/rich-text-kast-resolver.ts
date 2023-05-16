@@ -1,20 +1,26 @@
-import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk'
+import type { Elements, IContentItemsContainer } from '@kontent-ai/delivery-sdk'
 import { unified } from 'unified'
 import rehypeParse from 'rehype-parse'
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace'
 import { hastToKast } from './hast-kast'
-import type { KastRoot } from './kast'
+import type { KastRoot, KastInternalUrlResolver } from './kast'
 
 interface RichTextKastResolver {
   resolveRichText: (input: RichTextKastResolverInput) => Promise<KastRoot>
 }
 
-interface RichTextKastResolverInput {
-  element: Elements.RichTextElement
-  linkedItems?: IContentItem[]
+interface RichTextKastResolverOptions {
+  urlResolver?: KastInternalUrlResolver
 }
 
-function createRichTextKastResolver(): RichTextKastResolver {
+interface RichTextKastResolverInput {
+  element: Elements.RichTextElement
+  linkedItems?: IContentItemsContainer
+}
+
+function createRichTextKastResolver(
+  options?: RichTextKastResolverOptions
+): RichTextKastResolver {
   return {
     resolveRichText: async ({ element, linkedItems }) => {
       const hast = await unified()
@@ -23,13 +29,17 @@ function createRichTextKastResolver(): RichTextKastResolver {
 
       /*
       TODO: Extend hastToKast so that it will add more data to certain elements such as:
-      * url for internal links (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Links-in-rich-text)
       * component or item data for components (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Content-items-and-components-in-rich-text)
+      * Add a strategy for rewriting Asset URLs?
       */
 
       return await unified()
         .use(rehypeMinifyWhitespace)
-        .use(hastToKast, { element })
+        .use(hastToKast, {
+          element,
+          linkedItems,
+          urlResolver: options?.urlResolver
+        })
         .run(hast)
     }
   }

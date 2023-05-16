@@ -3,6 +3,7 @@ import type {
   Literal as UnistLiteral,
   Node as UnistNode
 } from 'unist'
+import type { IContentItem } from '@kontent-ai/delivery-sdk'
 
 /*
 See for reference:
@@ -249,6 +250,10 @@ type KastLinkData =
   | {
       type: typeof kastLinkType.internal
       itemId: string
+      itemCodename?: string
+      itemType?: string
+      itemUrlSlug?: string
+      itemUrl?: string | null
     }
   | {
       type: typeof kastLinkType.external
@@ -270,6 +275,8 @@ type KastLinkData =
       assetId: string
       url: string
     }
+
+type KastInternalUrlResolver = (contentItem: IContentItem) => string | null
 
 interface KastText extends KastLiteral {
   type: typeof kastNodeType.text
@@ -330,6 +337,7 @@ export type {
   KastLinkContent,
   KastLinkContentMap,
   KastLinkData,
+  KastInternalUrlResolver,
   KastText,
   KastLiteral
 }
