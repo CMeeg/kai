@@ -3,7 +3,11 @@ import { unified } from 'unified'
 import rehypeParse from 'rehype-parse'
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace'
 import { hastToKast } from './hast-kast'
-import type { KastRoot, KastInternalUrlResolver } from './kast'
+import type {
+  KastRoot,
+  KastInternalUrlResolver,
+  KastComponentItemResolver
+} from './kast'
 
 interface RichTextKastResolver {
   resolveRichText: (input: RichTextKastResolverInput) => Promise<KastRoot>
@@ -11,6 +15,7 @@ interface RichTextKastResolver {
 
 interface RichTextKastResolverOptions {
   urlResolver?: KastInternalUrlResolver
+  componentItemResolver?: KastComponentItemResolver
 }
 
 interface RichTextKastResolverInput {
@@ -29,7 +34,6 @@ function createRichTextKastResolver(
 
       /*
       TODO: Extend hastToKast so that it will add more data to certain elements such as:
-      * component or item data for components (https://kontent.ai/learn/reference/openapi/delivery-api/#section/Content-items-and-components-in-rich-text)
       * Add a strategy for rewriting Asset URLs?
       */
 
@@ -38,7 +42,8 @@ function createRichTextKastResolver(
         .use(hastToKast, {
           element,
           linkedItems,
-          urlResolver: options?.urlResolver
+          urlResolver: options?.urlResolver,
+          componentItemResolver: options?.componentItemResolver
         })
         .run(hast)
     }

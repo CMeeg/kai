@@ -7,7 +7,8 @@ import type {
 import {
   contentItemBuilder,
   deliveryClientBuilder,
-  createInternalLinkHtml
+  createInternalLinkHtml,
+  createComponentHtml
 } from '@meeg/kai-delivery-testing-lib'
 import { faker } from '@faker-js/faker'
 import { createRichTextKastResolver } from '~/rich-text-kast-resolver'
@@ -123,5 +124,53 @@ describe('richTextKastResolver', () => {
 
     expect(actual).toBeTypeOf('string')
     expect(actual).toEqual(expected)
+  })
+
+  test('should resolve component item data', async () => {
+    const itemId = faker.datatype.uuid()
+    const type = 'product'
+    const codename = 'test-product'
+    const urlSlug = 'test-url-slug'
+
+    const contentItem = contentItemBuilder()
+      .withSystemData({ id: itemId, type, codename })
+      .withTextElement({ name: 'Name', text: 'Test' })
+      .withUrlSlugElement({ name: 'URL slug', urlSlug })
+      .build()
+
+    const data = await createFixtureData((builder) => {
+      builder
+        .appendHtml(createComponentHtml(codename))
+        .appendLinkedItem(contentItem)
+    })
+
+    const createComponentItem = (contentItem: ProductContentItem) => ({
+      name: contentItem.elements.name.value,
+      urlSlug: contentItem.elements.url_slug.value
+    })
+
+    const resolver = createRichTextKastResolver({
+      componentItemResolver: (contentItem) => {
+        return contentItem.system.type === type
+          ? createComponentItem(contentItem as ProductContentItem)
+          : null
+      }
+    })
+
+    const kast = await resolver.resolveRichText({
+      element: data.item.elements.body,
+      linkedItems: data.linkedItems
+    })
+
+    const expected = createComponentItem(
+      Object.values(data.linkedItems)[0] as ProductContentItem
+    )
+
+    const component =
+      kast.children[0].type === kastNodeType.component ? kast.children[0] : null
+
+    const actual = component?.data?.item
+
+    expect(actual).toStrictEqual(expected)
   })
 })

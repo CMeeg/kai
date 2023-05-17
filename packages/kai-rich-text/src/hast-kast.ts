@@ -27,6 +27,7 @@ import type {
   KastTableCell,
   KastAsset,
   KastComponent,
+  KastComponentItemResolver,
   KastSpan,
   KastMarkType,
   KastLink,
@@ -235,10 +236,19 @@ const transformAssetElement: ElementTransformer = (
   }
 }
 
+function getLinkedItem(itemCodename: string, options?: HastToKastOptions) {
+  if (!itemCodename || !options?.linkedItems) {
+    return undefined
+  }
+
+  return options.linkedItems[itemCodename]
+}
+
 const transformComponentElement: ElementTransformer = (
   element,
   index,
-  parent
+  parent,
+  options
 ) => {
   if (!element.properties) {
     return removeNode(index, parent)
@@ -260,6 +270,14 @@ const transformComponentElement: ElementTransformer = (
         ? kastComponentType.item
         : kastComponentType.component,
     codename: String(dataCodename ?? '')
+  }
+
+  const contentItem = component.data.codename
+    ? getLinkedItem(component.data.codename, options)
+    : undefined
+
+  if (contentItem && options?.componentItemResolver) {
+    component.data.item = options.componentItemResolver(contentItem)
   }
 }
 
@@ -367,16 +385,16 @@ function createLinkData(
 function getContentItemUrl(
   itemCodename: string,
   options?: HastToKastOptions
-): ReturnType<KastInternalUrlResolver> {
-  if (!itemCodename || !options?.linkedItems || !options?.urlResolver) {
-    return null
+): ReturnType<KastInternalUrlResolver> | undefined {
+  if (!options?.urlResolver) {
+    return undefined
   }
 
   // Try to get the linkedItem using the codename
-  const contentItem = options.linkedItems[itemCodename]
+  const contentItem = getLinkedItem(itemCodename, options)
 
   if (!contentItem) {
-    return null
+    return undefined
   }
 
   return options.urlResolver(contentItem)
@@ -414,7 +432,7 @@ const transformLinkElement: ElementTransformer = (
 
       const url = getContentItemUrl(linkData.itemCodename, options)
 
-      if (url) {
+      if (typeof url !== 'undefined') {
         linkData.itemUrl = url
       }
     }
@@ -592,6 +610,7 @@ interface HastToKastOptions {
   element?: Elements.RichTextElement
   linkedItems?: IContentItemsContainer
   urlResolver?: KastInternalUrlResolver
+  componentItemResolver?: KastComponentItemResolver
 }
 
 function hastToKast(options?: HastToKastOptions) {

@@ -198,7 +198,10 @@ interface KastComponent extends UnistNode<KastComponentData> {
 type KastComponentData = {
   type: KastComponentType
   codename: string
+  item?: unknown | null
 }
+
+type KastComponentItemResolver = (contentItem: IContentItem) => unknown | null
 
 const kastMarkType = {
   strong: 'strong',
@@ -328,6 +331,7 @@ export type {
   KastComponentType,
   KastComponent,
   KastComponentData,
+  KastComponentItemResolver,
   KastSpan,
   KastSpanContent,
   KastSpanContentMap,
