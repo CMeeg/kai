@@ -184,6 +184,8 @@ type KastAssetData = {
   height?: number | null
 }
 
+type KastAssetUrlResolver = (assetUrl: string) => string
+
 const kastComponentType = {
   component: 'component',
   item: 'item'
@@ -279,7 +281,7 @@ type KastLinkData =
       url: string
     }
 
-type KastInternalUrlResolver = (contentItem: IContentItem) => string | null
+type KastContentItemUrlResolver = (contentItem: IContentItem) => string | null
 
 interface KastText extends KastLiteral {
   type: typeof kastNodeType.text
@@ -328,6 +330,7 @@ export type {
   KastTableCellContentMap,
   KastAsset,
   KastAssetData,
+  KastAssetUrlResolver,
   KastComponentType,
   KastComponent,
   KastComponentData,
@@ -341,7 +344,7 @@ export type {
   KastLinkContent,
   KastLinkContentMap,
   KastLinkData,
-  KastInternalUrlResolver,
+  KastContentItemUrlResolver,
   KastText,
   KastLiteral
 }

@@ -5,7 +5,8 @@ import rehypeMinifyWhitespace from 'rehype-minify-whitespace'
 import { hastToKast } from './hast-kast'
 import type {
   KastRoot,
-  KastInternalUrlResolver,
+  KastAssetUrlResolver,
+  KastContentItemUrlResolver,
   KastComponentItemResolver
 } from './kast'
 
@@ -14,7 +15,8 @@ interface RichTextKastResolver {
 }
 
 interface RichTextKastResolverOptions {
-  urlResolver?: KastInternalUrlResolver
+  assetUrlResolver?: KastAssetUrlResolver
+  contentItemUrlResolver?: KastContentItemUrlResolver
   componentItemResolver?: KastComponentItemResolver
 }
 
@@ -32,17 +34,13 @@ function createRichTextKastResolver(
         .use(rehypeParse, { fragment: true })
         .parse(element.value)
 
-      /*
-      TODO: Extend hastToKast so that it will add more data to certain elements such as:
-      * Add a strategy for rewriting Asset URLs?
-      */
-
       return await unified()
         .use(rehypeMinifyWhitespace)
         .use(hastToKast, {
           element,
           linkedItems,
-          urlResolver: options?.urlResolver,
+          assetUrlResolver: options?.assetUrlResolver,
+          contentItemUrlResolver: options?.contentItemUrlResolver,
           componentItemResolver: options?.componentItemResolver
         })
         .run(hast)

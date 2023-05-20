@@ -26,13 +26,14 @@ import type {
   KastTableRow,
   KastTableCell,
   KastAsset,
+  KastAssetUrlResolver,
   KastComponent,
   KastComponentItemResolver,
   KastSpan,
   KastMarkType,
   KastLink,
   KastLinkData,
-  KastInternalUrlResolver,
+  KastContentItemUrlResolver,
   KastText
 } from '~/kast'
 
@@ -233,6 +234,10 @@ const transformAssetElement: ElementTransformer = (
   if (richTextImage) {
     asset.data.width = richTextImage.width
     asset.data.height = richTextImage.height
+
+    if (options?.assetUrlResolver) {
+      asset.data.url = options.assetUrlResolver(asset.data.url)
+    }
   }
 }
 
@@ -385,8 +390,8 @@ function createLinkData(
 function getContentItemUrl(
   itemCodename: string,
   options?: HastToKastOptions
-): ReturnType<KastInternalUrlResolver> | undefined {
-  if (!options?.urlResolver) {
+): ReturnType<KastContentItemUrlResolver> | undefined {
+  if (!options?.contentItemUrlResolver) {
     return undefined
   }
 
@@ -397,7 +402,7 @@ function getContentItemUrl(
     return undefined
   }
 
-  return options.urlResolver(contentItem)
+  return options.contentItemUrlResolver(contentItem)
 }
 
 const transformLinkElement: ElementTransformer = (
@@ -609,7 +614,8 @@ function isEmpty(root: KastRoot) {
 interface HastToKastOptions {
   element?: Elements.RichTextElement
   linkedItems?: IContentItemsContainer
-  urlResolver?: KastInternalUrlResolver
+  assetUrlResolver?: KastAssetUrlResolver
+  contentItemUrlResolver?: KastContentItemUrlResolver
   componentItemResolver?: KastComponentItemResolver
 }
 

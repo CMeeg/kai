@@ -70,6 +70,41 @@ describe('richTextKastResolver', () => {
     expect(actual?.data?.height).toEqual(image.assetHeight)
   })
 
+  test('should resolve URL of assets', async () => {
+    const image: RichTextElementBuilderImage = {
+      imageId: faker.datatype.uuid(),
+      assetFileName: 'image.png',
+      assetWidth: faker.datatype.number({ min: 1, max: 3200 }),
+      assetHeight: faker.datatype.number({ min: 1, max: 3200 })
+    }
+
+    const data = await createFixtureData((builder) => {
+      builder.appendImage(image)
+    })
+
+    const createUrl = (assetUrl: string) => {
+      const url = new URL(assetUrl)
+      url.hostname = 'test.com'
+      return url.toString()
+    }
+
+    const resolver = createRichTextKastResolver({
+      assetUrlResolver: createUrl
+    })
+
+    const kast = await resolver.resolveRichText({
+      element: data.item.elements.body
+    })
+
+    const expected = createUrl(data.item.elements.body.images[0].url)
+
+    const actual =
+      kast.children[0].type === kastNodeType.asset ? kast.children[0] : null
+
+    expect(actual).not.toBeNull()
+    expect(actual?.data?.url).toEqual(expected)
+  })
+
   test('should resolve URL of internal link', async () => {
     const itemId = faker.datatype.uuid()
     const type = 'product'
@@ -98,7 +133,7 @@ describe('richTextKastResolver', () => {
     const createUrl = (slug: string) => `/${slug}`
 
     const resolver = createRichTextKastResolver({
-      urlResolver: (item) =>
+      contentItemUrlResolver: (item) =>
         item.system.type === type
           ? createUrl((item as ProductContentItem).elements.url_slug.value)
           : null
