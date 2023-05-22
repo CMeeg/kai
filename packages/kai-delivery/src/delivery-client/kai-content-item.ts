@@ -5,29 +5,30 @@ import type {
   Elements,
   IContentItemSystemAttributes
 } from '@kontent-ai/delivery-sdk'
+import type { KastRoot } from '@meeg/kai-rich-text'
 import type { ContentItemUrlResolver } from '~/routing'
 
-type KaiContentItem<T extends IContentItem> = T & {
+type KaiContentItem<T extends IContentItem> = {
   [Property in keyof T]: T[Property] extends IContentItemElements
     ? KaiContentItemElements<T[Property]>
     : T[Property] extends IContentItemSystemAttributes
-    ? KaiContentItemSystemAttributes<T[Property]>
+    ? KaiContentItemSystemAttributes
     : T[Property]
 } & {
-  kai: {
+  kai?: {
     url?: string | null
   }
 }
 
-type KaiContentItemElements<T extends IContentItemElements> = T & {
+type KaiContentItemElements<T extends IContentItemElements> = {
   [Property in keyof T]: T[Property] extends Elements.LinkedItemsElement
     ? KaiLinkedItemsElement<T[Property]>
     : T[Property] extends Elements.RichTextElement
-    ? KaiRichTextElement<T[Property]>
+    ? KaiRichTextElement
     : T[Property]
 }
 
-type KaiLinkedItemsElement<T> = T & {
+type KaiLinkedItemsElement<T> = {
   [Property in keyof T]: T[Property] extends IContentItem[]
     ? KaiContentItem<ArrayElement<T[Property]>>[]
     : T[Property]
@@ -36,16 +37,13 @@ type KaiLinkedItemsElement<T> = T & {
 type ArrayElement<TArray extends readonly unknown[]> =
   TArray extends readonly (infer ArrayElementType)[] ? ArrayElementType : never
 
-// TODO: Need to type "portable text"?
-type KaiRichTextElement<T> = T & {
+interface KaiRichTextElement extends Elements.RichTextElement {
   kai: {
-    portableText: unknown
+    kast: KastRoot
   }
 }
 
-type KaiContentItemSystemAttributes<
-  T extends IContentItemSystemAttributes = IContentItemSystemAttributes
-> = T & {
+interface KaiContentItemSystemAttributes extends IContentItemSystemAttributes {
   kai: {
     isComponent: boolean
   }

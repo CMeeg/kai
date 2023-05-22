@@ -8,7 +8,7 @@ import type {
   Elements,
   Contracts
 } from '@kontent-ai/delivery-sdk'
-import { contentItemUrlResolver } from './url-resolver'
+import { contentItemUrlResolver } from './content-item-url-resolver'
 
 type HomepageContentItem = IContentItem<{
   name: Elements.TextElement

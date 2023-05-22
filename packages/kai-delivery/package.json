@@ -24,10 +24,11 @@
   "dependencies": {
     "@kontent-ai/delivery-node-parser": "^4.0.0",
     "@kontent-ai/delivery-sdk": "^14.0.1",
-    "@meeg/kai-delivery-testing-lib": "workspace:*",
+    "@meeg/kai-rich-text": "workspace:*",
     "uri-template": "^2.0.0"
   },
   "devDependencies": {
+    "@meeg/kai-delivery-testing-lib": "workspace:*",
     "@types/jsdom": "^21.1.1",
     "eslint": "^8.35.0",
     "eslint-config-kai": "workspace:*",

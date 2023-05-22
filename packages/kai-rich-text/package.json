@@ -23,7 +23,6 @@
   "homepage": "https://github.com/CMeeg/kai#readme",
   "dependencies": {
     "@kontent-ai/delivery-sdk": "^14.0.1",
-    "@meeg/kai-delivery-testing-lib": "workspace:*",
     "rehype-minify-whitespace": "^5.0.1",
     "rehype-parse": "^8.0.4",
     "unified": "^10.1.2",
@@ -31,6 +30,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@meeg/kai-delivery-testing-lib": "workspace:*",
     "@types/hast": "^2.3.4",
     "@types/unist": "^2.0.6",
     "eslint": "^8.35.0",
