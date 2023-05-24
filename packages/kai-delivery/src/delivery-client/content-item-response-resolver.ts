@@ -11,9 +11,10 @@ import type { AssetUrlResolver, ContentItemUrlResolver } from '~/routing'
 import type {
   KaiContentItem,
   KaiContentItemSystemAttributes,
-  KaiRichTextElement
-} from './kai-content-item'
-import { KaiContentItemElements } from './kai-content-item'
+  KaiContentItemElements,
+  KaiRichTextElement,
+  ContentItemResolver
+} from '~/content-items'
 import { createRichTextKastResolver } from '@meeg/kai-rich-text'
 
 type ListContentItemsResponse<T extends IContentItem> =
@@ -51,7 +52,7 @@ function resolveContentItemUrl<T extends IContentItem>(
 function createContentItemUrlResolver(
   options?: ContentItemResponseResolverOptions
 ) {
-  const resolver = options?.routing?.contentItemUrlResolver
+  const resolver = options?.contentItemUrlResolver
 
   if (!resolver) {
     return undefined
@@ -59,6 +60,18 @@ function createContentItemUrlResolver(
 
   return (contentItem: IContentItem) =>
     resolveContentItemUrl(contentItem, resolver)
+}
+
+function createComponentItemResolver(
+  options?: ContentItemResponseResolverOptions
+) {
+  const resolver = options?.contentItemResolver
+
+  if (!resolver) {
+    return undefined
+  }
+
+  return (contentItem: IContentItem) => resolver.resolve(contentItem)
 }
 
 async function resolveElements<T extends IContentItemElements>(
@@ -79,9 +92,9 @@ async function resolveElements<T extends IContentItemElements>(
       }
 
       const resolver = createRichTextKastResolver({
-        assetUrlResolver: options?.routing?.assetUrlResolver,
-        contentItemUrlResolver: createContentItemUrlResolver(options)
-        // TODO: componentItemResolver
+        assetUrlResolver: options?.assetUrlResolver,
+        contentItemUrlResolver: createContentItemUrlResolver(options),
+        componentItemResolver: createComponentItemResolver(options)
       })
 
       richTextElement.kai = {
@@ -117,10 +130,10 @@ async function resolveContentItem<T extends IContentItem>(
 
   if (
     typeof kaiContentItem.kai?.url === 'undefined' &&
-    options?.routing?.contentItemUrlResolver
+    options?.contentItemUrlResolver
   ) {
     kaiContentItem.kai = {
-      url: options.routing.contentItemUrlResolver.resolve(contentItem)
+      url: options.contentItemUrlResolver.resolve(contentItem)
     }
   }
 
@@ -147,6 +160,8 @@ async function resolveLinkedItems(
   linkedItems: IContentItemsContainer,
   options?: ContentItemResponseResolverOptions
 ) {
+  // TODO: Need to fetch content items of rich text links that are not present in `linkedItems`
+
   // TODO: Mutation is convenient and easy, but doesn't feel "right"
   const codenames = Object.keys(linkedItems)
 
@@ -184,10 +199,9 @@ async function resolveItemsResponse<T extends IContentItem>(
 }
 
 interface ContentItemResponseResolverOptions {
-  routing?: {
-    contentItemUrlResolver?: ContentItemUrlResolver
-    assetUrlResolver?: AssetUrlResolver
-  }
+  contentItemResolver?: ContentItemResolver
+  contentItemUrlResolver?: ContentItemUrlResolver
+  assetUrlResolver?: AssetUrlResolver
 }
 
 interface ContentItemResponseResolver {

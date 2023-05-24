@@ -62,6 +62,7 @@ function resolveContentItemUrl(
   const urlResolver = config[contentType]
 
   if (!urlResolver) {
+    // TODO: Is returning null desired - this will "fail silently"
     // No resolver found
 
     return null

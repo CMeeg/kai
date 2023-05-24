@@ -9,8 +9,10 @@ import type {
   Contracts
 } from '@kontent-ai/delivery-sdk'
 import { contentItemUrlResolver } from '~/routing'
+import type { KaiContentItem } from '~/content-items'
+import { contentItemResolver } from '~/content-items'
 import { contentItemResponseResolver } from './content-item-response-resolver'
-import type { KaiContentItem } from './kai-content-item'
+import { kastNodeType } from '@meeg/kai-rich-text'
 
 type ArticleContentItem = IContentItem<{
   name: Elements.TextElement
@@ -38,6 +40,18 @@ function createContentItemUrlResolver() {
   })
 }
 
+function createContentItemResolver() {
+  return contentItemResolver({
+    [contentTypes.article.codename]: (
+      contentItem: KaiContentItem<ArticleContentItem>
+    ) => {
+      return {
+        name: contentItem.elements.name.value
+      }
+    }
+  })
+}
+
 async function fetchContentItem<T extends IContentItem>(
   contentItem: Contracts.IViewContentItemContract
 ) {
@@ -47,9 +61,7 @@ async function fetchContentItem<T extends IContentItem>(
 }
 
 describe('contentItemResponseResolver', () => {
-  test('should return `KaiContentItem<TContentItem>` given a content item of type `TContentItem`', async () => {
-    const contentItemUrlResolver = createContentItemUrlResolver()
-
+  test('should return `KaiContentItem<T>` given a content item of type `T`', async () => {
     const response = await fetchContentItem<ArticleContentItem>(
       contentItemBuilder()
         .withSystemData({
@@ -64,18 +76,16 @@ describe('contentItemResponseResolver', () => {
 
     const contentItem = response.data.item
 
-    const kaiContentItem = await contentItemResponseResolver({
-      routing: {
-        contentItemUrlResolver
-      }
-    }).resolveItem(response)
+    const kaiContentItem = await contentItemResponseResolver().resolveItem(
+      response
+    )
 
     expectTypeOf(kaiContentItem).toMatchTypeOf<
       KaiContentItem<typeof contentItem>
     >()
   })
 
-  test('should resolve URL given `urlResolver`', async () => {
+  test('should resolve URL of content item when `contentItemUrlResolver` provided', async () => {
     const contentItemUrlResolver = createContentItemUrlResolver()
 
     const response = await fetchContentItem<ArticleContentItem>(
@@ -91,18 +101,18 @@ describe('contentItemResponseResolver', () => {
     )
 
     const contentItem = response.data.item
-    const resolvedUrl = contentItemUrlResolver.resolve(contentItem)
+    const expected = contentItemUrlResolver.resolve(contentItem)
 
     const kaiContentItem = await contentItemResponseResolver({
-      routing: {
-        contentItemUrlResolver
-      }
+      contentItemUrlResolver
     }).resolveItem(response)
 
-    expect(kaiContentItem.kai?.url).toEqual(resolvedUrl)
+    const actual = kaiContentItem.kai?.url
+
+    expect(actual).toEqual(expected)
   })
 
-  test('should resolve URL of linked items given `urlResolver`', async () => {
+  test('should resolve URL of linked items when `contentItemUrlResolver` provided', async () => {
     const contentItemUrlResolver = createContentItemUrlResolver()
 
     const linkedContentItem = contentItemBuilder()
@@ -133,18 +143,82 @@ describe('contentItemResponseResolver', () => {
 
     const contentItem = response.data.item
     const linkedItem = contentItem.elements.related_articles.linkedItems[0]
-    const resolvedUrl = contentItemUrlResolver.resolve(linkedItem)
+    const expected = contentItemUrlResolver.resolve(linkedItem)
 
     const kaiContentItem = await contentItemResponseResolver({
-      routing: {
-        contentItemUrlResolver
-      }
+      contentItemUrlResolver
     }).resolveItem(response)
 
     const kaiLinkedItem =
       kaiContentItem.elements.related_articles.linkedItems[0]
 
-    expect(kaiLinkedItem.kai?.url).toEqual(resolvedUrl)
+    const actual = kaiLinkedItem.kai?.url
+
+    expect(actual).toEqual(expected)
+  })
+
+  test('should resolve component items in Rich Text elements when `contentItemUrlResolver` provided', async () => {
+    const contentItemResolver = createContentItemResolver()
+
+    const componentItem = contentItemBuilder()
+      .withSystemData({
+        type: contentTypes.article.codename
+      })
+      .withTextElement({
+        name: 'Name',
+        text: 'Component article'
+      })
+      .withRichTextElement({
+        name: 'Content',
+        buildElement(builder) {
+          builder.appendHtml('<p>This is a component article.</p>')
+        }
+      })
+      .withUrlSlugElement({
+        name: 'URL slug',
+        urlSlug: 'component-article'
+      })
+      .buildAsComponent()
+
+    const response = await fetchContentItem<ArticleContentItem>(
+      contentItemBuilder()
+        .withSystemData({
+          type: contentTypes.article.codename
+        })
+        .withTextElement({
+          name: 'Name',
+          text: 'Article'
+        })
+        .withRichTextElement({
+          name: 'Content',
+          buildElement(builder) {
+            builder.appendComponent(componentItem)
+          }
+        })
+        .withUrlSlugElement({
+          name: 'URL slug',
+          urlSlug: 'article'
+        })
+        .build()
+    )
+
+    const linkedItem =
+      response.data.linkedItems[componentItem.item.system.codename]
+    const expected = contentItemResolver.resolve(linkedItem)
+
+    const kaiContentItem = await contentItemResponseResolver({
+      contentItemResolver
+    }).resolveItem(response)
+
+    const contentComponent =
+      kaiContentItem.elements.content.kai?.kast.children[0]
+
+    let actual
+    if (contentComponent?.type === kastNodeType.component) {
+      actual = contentComponent.data?.item
+    }
+
+    expect(actual).toEqual(expected)
   })
 
   test.skip('scratchpad', async () => {
@@ -162,9 +236,7 @@ describe('contentItemResponseResolver', () => {
     })
 
     const responseResolver = contentItemResponseResolver({
-      routing: {
-        contentItemUrlResolver: itemUrlResolver
-      }
+      contentItemUrlResolver: itemUrlResolver
     })
 
     const linkedContentItem = contentItemBuilder()
@@ -209,13 +281,13 @@ describe('contentItemResponseResolver', () => {
 
     // TODO: Item(s) should be of type KaiContentItem and have a resolvedUrl key and system.isComponent
     contentItem?.kai?.url
-    contentItem?.system.kai.isComponent
+    contentItem?.system.kai?.isComponent
 
     // TODO: Linked items should also be of type KaiContentItem
     contentItem?.elements.related_articles.linkedItems[0].kai?.url
 
     // TODO: Rich text elements should have kast
-    contentItem?.elements.content.kai.kast
+    contentItem?.elements.content.kai?.kast
 
     //const resolvedUrl = urlResolver.resolve(page)
 

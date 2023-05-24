@@ -28,6 +28,7 @@ const kastNodeType = {
 
 type KastNodeType = keyof typeof kastNodeType
 
+// TODO: We don't need the data or properties keys from UnistParent
 interface KastParent extends UnistParent {
   children: KastContent[]
 }
@@ -69,7 +70,7 @@ interface KastHeading extends KastParent {
 type KastHeadingContent = KastHeadingContentMap[keyof KastHeadingContentMap]
 
 /**
- * TODO: This comment is interesting, and the capability is worth preserving for custom elements?
+ * TODO: This comment is interesting, and the capability is worth preserving for custom elements? Otherwise we prob don't need to preserve this behaviour
  * This map registers all node types that may be used as content in an element.
  *
  * These types are accepted inside `element` nodes.
@@ -171,6 +172,7 @@ interface KastTableCellContentMap {
   text: KastText
 }
 
+// TODO: We don't need the data or properties keys from UnistNode
 interface KastAsset extends UnistNode<KastAssetData> {
   type: typeof kastNodeType.asset
 }
@@ -193,6 +195,7 @@ const kastComponentType = {
 
 type KastComponentType = keyof typeof kastComponentType
 
+// TODO: We don't need the data or properties keys from UnistNode
 interface KastComponent extends UnistNode<KastComponentData> {
   type: typeof kastNodeType.component
 }
@@ -287,6 +290,7 @@ interface KastText extends KastLiteral {
   type: typeof kastNodeType.text
 }
 
+// TODO: We don't need the data or properties keys from UnistLiteral
 interface KastLiteral extends UnistLiteral {
   value: string
 }

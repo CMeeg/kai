@@ -8,7 +8,7 @@ import type {
 import type { KastRoot } from '@meeg/kai-rich-text'
 import type { ContentItemUrlResolver } from '~/routing'
 
-type KaiContentItem<T extends IContentItem> = {
+type KaiContentItem<T extends IContentItem> = IContentItem<T['elements']> & {
   [Property in keyof T]: T[Property] extends IContentItemElements
     ? KaiContentItemElements<T[Property]>
     : T[Property] extends IContentItemSystemAttributes
@@ -38,13 +38,13 @@ type ArrayElement<TArray extends readonly unknown[]> =
   TArray extends readonly (infer ArrayElementType)[] ? ArrayElementType : never
 
 interface KaiRichTextElement extends Elements.RichTextElement {
-  kai: {
+  kai?: {
     kast: KastRoot
   }
 }
 
 interface KaiContentItemSystemAttributes extends IContentItemSystemAttributes {
-  kai: {
+  kai?: {
     isComponent: boolean
   }
 }
